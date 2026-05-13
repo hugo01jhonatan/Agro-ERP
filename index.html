@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgroSistema ERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-deep: #1B4332;
+    --green-mid: #2D6A4F;
+    --green-light: #52B788;
+    --green-pale: #D8F3DC;
+    --amber: #D4A017;
+    --amber-pale: #FFF3CD;
+    --text: #1A1A1A;
+    --text2: #555;
+    --text3: #888;
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --border: #E8E4DC;
+    --radius: 10px;
+    --radius-sm: 7px;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  /* ── SCREEN MANAGER ───────────────────────── */
+  .screen { display: none; }
+  .screen.active { display: flex; }
+
+  /* ── LOGIN ────────────────────────────────── */
+  #login-screen {
+    min-height: 100vh;
+    flex-direction: row;
+  }
+
+  .login-left {
+    width: 42%;
+    background: var(--green-deep);
+    padding: 52px 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-left::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(82,183,136,0.12);
+  }
+  .login-left::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(82,183,136,0.08);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    position: relative;
+    z-index: 1;
+  }
+  .brand-icon {
+    width: 38px; height: 38px;
+    background: var(--green-light);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand-icon i { font-size: 20px; color: #fff; }
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 19px;
+    color: #fff;
+    letter-spacing: 0.01em;
+  }
+
+  .login-hero {
+    position: relative;
+    z-index: 1;
+  }
+  .login-hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px;
+    color: #fff;
+    line-height: 1.28;
+    font-weight: 400;
+    margin-bottom: 14px;
+  }
+  .login-hero p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.58);
+    line-height: 1.65;
+  }
+
+  .login-modules {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .lm-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    background: rgba(255,255,255,0.07);
+    border-radius: var(--radius-sm);
+    transition: background 0.2s;
+  }
+  .lm-item i { font-size: 16px; color: var(--green-light); }
+  .lm-item span { font-size: 13px; color: rgba(255,255,255,0.76); }
+
+  .login-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 40px;
+    background: var(--bg);
+  }
+
+  .login-box { width: 100%; max-width: 360px; }
+  .login-box h2 { font-size: 21px; font-weight: 500; margin-bottom: 5px; }
+  .login-box > p { font-size: 13px; color: var(--text3); margin-bottom: 28px; }
+
+  .demo-badge {
+    background: var(--green-pale);
+    border: 1px solid #b7dfc0;
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    margin-bottom: 22px;
+    font-size: 12px;
+    color: var(--green-deep);
+    line-height: 1.7;
+  }
+  .demo-badge strong { display: block; font-weight: 500; margin-bottom: 2px; }
+
+  .form-group { margin-bottom: 15px; }
+  .form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .form-group input {
+    width: 100%;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 13px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.18s;
+  }
+  .form-group input:focus { border-color: var(--green-mid); }
+
+  .login-error {
+    font-size: 12px;
+    color: #c0392b;
+    margin-bottom: 10px;
+    display: none;
+  }
+
+  .btn-login {
+    width: 100%;
+    height: 44px;
+    background: var(--green-deep);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .btn-login:hover { background: var(--green-mid); }
+
+  .login-footer {
+    font-size: 11px;
+    color: var(--text3);
+    text-align: center;
+    margin-top: 18px;
+  }
+
+  /* ── APP ──────────────────────────────────── */
+  #app-screen {
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    height: 50px;
+    padding: 0 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .topbar-left .brand-icon { width: 28px; height: 28px; }
+  .topbar-left .brand-icon i { font-size: 15px; }
+  .topbar-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: var(--green-deep);
+  }
+  .topbar-right { display: flex; align-items: center; gap: 14px; }
+  .topbar-meta { font-size: 12px; color: var(--text3); }
+  .topbar-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--green-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500;
+    color: var(--green-deep);
+  }
+  .btn-logout {
+    font-size: 12px;
+    color: var(--text3);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 11px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    display: flex; align-items: center; gap: 5px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-logout:hover { border-color: var(--text3); color: var(--text); }
+
+  .app-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── SIDEBAR ──────────────────────────────── */
+  .sidebar {
+    width: 184px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 14px 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .nav-section {
+    font-size: 10px;
+    color: var(--text3);
+    padding: 12px 18px 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 18px;
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .nav-item:hover { background: #F5F5F0; color: var(--text); }
+  .nav-item.active {
+    color: var(--green-deep);
+    background: var(--green-pale);
+    border-left-color: var(--green-mid);
+    font-weight: 500;
+  }
+  .nav-item i { font-size: 16px; flex-shrink: 0; }
+
+  /* ── CONTENT ──────────────────────────────── */
+  .content {
+    flex: 1;
+    padding: 22px;
+    background: var(--bg);
+    overflow-y: auto;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; animation: fadein 0.2s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* ── COMPONENTS ───────────────────────────── */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .metric {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 13px 15px;
+  }
+  .metric-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 5px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .metric-label i { font-size: 13px; }
+  .metric-value { font-size: 21px; font-weight: 500; color: var(--text); }
+  .metric-sub { font-size: 11px; color: #2D6A4F; margin-top: 3px; }
+  .metric-sub.down { color: #c0392b; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 15px;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 13px;
+  }
+
+  .cards-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
+    margin-bottom: 14px;
+  }
+
+  /* Table */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .tbl th {
+    text-align: left;
+    padding: 6px 9px;
+    color: var(--text3);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .tbl td {
+    padding: 7px 9px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tr:hover td { background: #F8F8F5; }
+
+  /* Status pills */
+  .pill {
+    font-size: 10px;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+    display: inline-block;
+  }
+  .pill-ok   { background: #D8F3DC; color: #1B4332; }
+  .pill-warn { background: #FFF3CD; color: #7B5E00; }
+  .pill-bad  { background: #FDECEA; color: #7B1010; }
+  .pill-info { background: #EBF5FF; color: #0B4F8A; }
+
+  /* Progress bars */
+  .prog { height: 5px; background: #EDEDE8; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+  .prog-fill { height: 100%; border-radius: 3px; background: var(--green-mid); transition: width 0.6s ease; }
+  .prog-fill.warn { background: var(--amber); }
+  .prog-fill.bad  { background: #e74c3c; }
+
+  /* Bar chart */
+  .barchart { display: flex; align-items: flex-end; gap: 5px; height: 92px; margin-top: 8px; }
+  .bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 3px; }
+  .bar { width: 100%; background: var(--green-mid); border-radius: 3px 3px 0 0; transition: height 0.4s ease; }
+  .bar.light { background: #A8D5BA; }
+  .bar-lbl { font-size: 10px; color: var(--text3); }
+
+  /* Alert items */
+  .alert-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 11px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 7px;
+    font-size: 12px;
+  }
+  .alert-item:last-child { margin-bottom: 0; }
+  .alert-item i { font-size: 15px; flex-shrink: 0; }
+
+  /* Funil */
+  .funil { display: flex; gap: 6px; align-items: flex-end; margin-top: 12px; flex-wrap: wrap; }
+  .funil-step { flex: 1; min-width: 70px; text-align: center; }
+  .funil-inner { border-radius: var(--radius-sm); padding: 11px 6px; }
+  .funil-num { font-size: 18px; font-weight: 500; }
+  .funil-lbl { font-size: 10px; margin-top: 3px; }
+  .funil-arrow { font-size: 18px; color: var(--text3); padding-bottom: 20px; align-self: flex-end; }
+
+  /* Mini stats */
+  .mini-stat {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .mini-stat:last-child { border-bottom: none; }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .login-left { display: none; }
+    .login-right { padding: 40px 24px; }
+    .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cards-row { grid-template-columns: 1fr; }
+    .sidebar { width: 52px; overflow: hidden; }
+    .sidebar .nav-section, .sidebar .nav-item span { display: none; }
+    .nav-item { justify-content: center; padding: 12px; }
+    .nav-item i { font-size: 18px; }
+    .topbar-meta { display: none; }
+  }
+  @media (max-width: 480px) {
+    .metrics { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ LOGIN ═══ -->
+<div id="login-screen" class="screen active">
+  <div class="login-left">
+    <div class="brand">
+      <div class="brand-icon"><i class="ti ti-plant"></i></div>
+      <span class="brand-name">AgroSistema ERP</span>
+    </div>
+    <div class="login-hero">
+      <h1>Gestão completa para o campo</h1>
+      <p>Do plantio à venda, controle total da sua operação agrícola em um único lugar.</p>
+    </div>
+    <div class="login-modules">
+      <div class="lm-item"><i class="ti ti-currency-dollar"></i><span>Financeiro e contabilidade</span></div>
+      <div class="lm-item"><i class="ti ti-package"></i><span>Estoque e insumos</span></div>
+      <div class="lm-item"><i class="ti ti-chart-bar"></i><span>Vendas e CRM</span></div>
+      <div class="lm-item"><i class="ti ti-truck"></i><span>Compras e fornecedores</span></div>
+      <div class="lm-item"><i class="ti ti-settings"></i><span>Produção e PCP</span></div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-box">
+      <h2>Entrar na plataforma</h2>
+      <p>Acesse sua conta para continuar</p>
+      <div class="demo-badge">
+        <strong>Acesso de demonstração</strong>
+        Usuário: <b>demo@agrosistema.com.br</b><br>
+        Senha: <b>agro2025</b>
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="inp-email" value="demo@agrosistema.com.br" placeholder="seu@email.com.br">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="inp-senha" value="agro2025" placeholder="••••••••">
+      </div>
+      <div class="login-error" id="login-error">
+        <i class="ti ti-alert-circle" style="vertical-align:-2px;margin-right:4px"></i>E-mail ou senha incorretos. Use as credenciais de demonstração acima.
+      </div>
+      <button class="btn-login" onclick="doLogin()">Entrar no sistema</button>
+      <p class="login-footer">Versão demonstração · Dados fictícios para apresentação</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ APP ═══════ -->
+<div id="app-screen" class="screen" style="flex-direction:column;">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="brand-icon" style="width:28px;height:28px;background:var(--green-mid);border-radius:7px;display:flex;align-items:center;justify-content:center;">
+        <i class="ti ti-plant" style="font-size:15px;color:#fff;"></i>
+      </div>
+      <span class="topbar-title">AgroSistema ERP</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-meta">Safra 2025/2026</span>
+      <div class="topbar-avatar">JS</div>
+      <button class="btn-logout" onclick="doLogout()">
+        <i class="ti ti-logout" style="font-size:13px;"></i> Sair
+      </button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <div class="sidebar">
+      <div class="nav-section">Principal</div>
+      <div class="nav-item active" onclick="showPage('home',this)">
+        <i class="ti ti-home"></i><span>Visão geral</span>
+      </div>
+      <div class="nav-section">Módulos</div>
+      <div class="nav-item" onclick="showPage('financeiro',this)">
+        <i class="ti ti-currency-dollar"></i><span>Financeiro</span>
+      </div>
+      <div class="nav-item" onclick="showPage('estoque',this)">
+        <i class="ti ti-package"></i><span>Estoque</span>
+      </div>
+      <div class="nav-item" onclick="showPage('vendas',this)">
+        <i class="ti ti-chart-bar"></i><span>Vendas / CRM</span>
+      </div>
+      <div class="nav-item" onclick="showPage('compras',this)">
+        <i class="ti ti-truck"></i><span>Compras</span>
+      </div>
+      <div class="nav-item" onclick="showPage('producao',this)">
+        <i class="ti ti-settings"></i><span>Produção / PCP</span>
+      </div>
+      <div class="nav-section">Sistema</div>
+      <div class="nav-item" onclick="showPage('relatorios',this)">
+        <i class="ti ti-file-analytics"></i><span>Relatórios</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ── VISÃO GERAL ─────────────────── -->
+      <div class="page active" id="page-home">
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label"><i class="ti ti-currency-dollar"></i>Receita mensal</div>
+            <div class="metric-value">R$ 4,2M</div>
+            <div class="metric-sub">+12% vs mês anterior</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label"><i class="ti ti-package"></i>Estoque total</div>
+            <div class="metric-value">8.340 t</div>
+            <div class="metric-sub down">3 alertas críticos</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label"><i class="ti ti-chart-bar"></i>Pedidos abertos</div>
+            <div class="metric-value">127</div>
+            <div class="metric-sub">R$ 1,8M em negociação</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label"><i class="ti ti-map"></i>Áreas em cultivo</div>
+            <div class="metric-value">4.200 ha</div>
+            <div class="metric-sub down">-5% vs safra anterior</div>
+          </div>
+        </div>
+
+        <div class="cards-row">
+          <div class="card">
+            <div class="section-title">Receita mensal — últimos 6 meses</div>
+            <div class="barchart" id="home-chart"></div>
+          </div>
+          <div class="card">
+            <div class="section-title">Alertas do sistema</div>
+            <div class="alert-item" style="background:#FDECEA;">
+              <i class="ti ti-alert-circle" style="color:#c0392b;"></i>
+              <span style="color:#7B1010;">Estoque de ureia abaixo do mínimo (12 t / mín. 50 t)</span>
+            </div>
+            <div class="alert-item" style="background:#FDECEA;">
+              <i class="ti ti-alert-circle" style="color:#c0392b;"></i>
+              <span style="color:#7B1010;">Fatura #4821 vencida há 3 dias — R$ 42.000</span>
+            </div>
+            <div class="alert-item" style="background:#FFF3CD;">
+              <i class="ti ti-alert-triangle" style="color:var(--amber);"></i>
+              <span style="color:#7B5E00;">Fungicida Opera abaixo do nível ideal</span>
+            </div>
+            <div class="alert-item" style="background:#D8F3DC;">
+              <i class="ti ti-check" style="color:var(--green-mid);"></i>
+              <span style="color:var(--green-deep);">Pedido #0392 confirmado — Cooperativa Sul</span>
+            </div>
+            <div class="alert-item" style="background:#EBF5FF;">
+              <i class="ti ti-info-circle" style="color:#0B4F8A;"></i>
+              <span style="color:#0B4F8A;">Colheita do talhão 07 prevista em 8 dias</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">Últimas operações</div>
+          <table class="tbl">
+            <thead>
+              <tr><th>Data</th><th>Operação</th><th>Módulo</th><th>Valor</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>12/05/2025</td><td>Venda soja — Cooperativa Sul</td><td>Vendas</td><td>R$ 320.000</td><td><span class="pill pill-ok">Confirmado</span></td></tr>
+              <tr><td>11/05/2025</td><td>Compra fertilizante MAP</td><td>Compras</td><td>R$ 88.500</td><td><span class="pill pill-warn">Pendente</span></td></tr>
+              <tr><td>10/05/2025</td><td>Aplicação herbicida talhão 04</td><td>Produção</td><td>—</td><td><span class="pill pill-ok">Concluído</span></td></tr>
+              <tr><td>09/05/2025</td><td>Fatura fornecedor #4821</td><td>Financeiro</td><td>R$ 42.000</td><td><span class="pill pill-bad">Vencido</span></td></tr>
+              <tr><td>08/05/2025</td><td>Pedido de compra ureia 100t</td><td>Compras</td><td>R$ 210.000</td><td><span class="pill pill-info">Aguardando</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── FINANCEIRO ──────────────────── -->
+      <div class="page" id="page-financeiro">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Receitas (mês)</div><div class="metric-value">R$ 4,2M</div><div class="metric-sub">+12% vs mês ant.</div></div>
+          <div class="metric"><div class="metric-label">Despesas (mês)</div><div class="metric-value">R$ 2,9M</div><div class="metric-sub down">+8% vs mês ant.</div></div>
+          <div class="metric"><div class="metric-label">Resultado líquido</div><div class="metric-value">R$ 1,3M</div><div class="metric-sub">Margem 31%</div></div>
+          <div class="metric"><div class="metric-label">Títulos vencidos</div><div class="metric-value">R$ 127k</div><div class="metric-sub down">3 títulos em aberto</div></div>
+        </div>
+        <div class="cards-row">
+          <div class="card">
+            <div class="section-title">Fluxo de caixa — semanas de maio/2025</div>
+            <div class="barchart" id="fin-chart"></div>
+          </div>
+          <div class="card">
+            <div class="section-title">Despesas por categoria</div>
+            <div style="margin-top:6px;">
+              <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Insumos agrícolas</span><span style="font-weight:500;">45%</span></div><div class="prog"><div class="prog-fill" style="width:45%;"></div></div></div>
+              <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Mão de obra</span><span style="font-weight:500;">22%</span></div><div class="prog"><div class="prog-fill" style="width:22%;"></div></div></div>
+              <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Maquinário e combustível</span><span style="font-weight:500;">18%</span></div><div class="prog"><div class="prog-fill warn" style="width:18%;"></div></div></div>
+              <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Arrendamento</span><span style="font-weight:500;">10%</span></div><div class="prog"><div class="prog-fill" style="width:10%;"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Outros</span><span style="font-weight:500;">5%</span></div><div class="prog"><div class="prog-fill" style="width:5%;"></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Contas a pagar e receber</div>
+          <table class="tbl">
+            <thead><tr><th>Título</th><th>Tipo</th><th>Parte</th><th>Vencimento</th><th>Valor</th><th>Situação</th></tr></thead>
+            <tbody>
+              <tr><td>#4821</td><td>Pagar</td><td>AgroNutrição SA</td><td>09/05/2025</td><td>R$ 42.000</td><td><span class="pill pill-bad">Vencido</span></td></tr>
+              <tr><td>#5102</td><td>Receber</td><td>Cooperativa Sul</td><td>20/05/2025</td><td>R$ 320.000</td><td><span class="pill pill-ok">A vencer</span></td></tr>
+              <tr><td>#5099</td><td>Pagar</td><td>FertiSul</td><td>25/05/2025</td><td>R$ 88.500</td><td><span class="pill pill-warn">Pendente NF</span></td></tr>
+              <tr><td>#5110</td><td>Receber</td><td>Exportadora GrainBR</td><td>30/05/2025</td><td>R$ 210.000</td><td><span class="pill pill-info">Negociação</span></td></tr>
+              <tr><td>#5088</td><td>Pagar</td><td>OleoAgro Ltda</td><td>15/06/2025</td><td>R$ 31.200</td><td><span class="pill pill-ok">A vencer</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── ESTOQUE ──────────────────────── -->
+      <div class="page" id="page-estoque">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Insumos em estoque</div><div class="metric-value">1.240 t</div><div class="metric-sub down">3 itens críticos</div></div>
+          <div class="metric"><div class="metric-label">Grãos armazenados</div><div class="metric-value">7.100 t</div><div class="metric-sub">Silos A, B e C</div></div>
+          <div class="metric"><div class="metric-label">Valor total em estoque</div><div class="metric-value">R$ 6,8M</div><div class="metric-sub">+4% vs mês ant.</div></div>
+          <div class="metric"><div class="metric-label">Giro médio</div><div class="metric-value">18 dias</div><div class="metric-sub down">Meta: 15 dias</div></div>
+        </div>
+        <div class="card">
+          <div class="section-title">Posição de insumos</div>
+          <table class="tbl">
+            <thead><tr><th>Produto</th><th>Unidade</th><th>Qtd. atual</th><th>Estoque mín.</th><th>Nível</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Ureia</td><td>t</td><td>12</td><td>50</td><td><div class="prog"><div class="prog-fill bad" style="width:24%;"></div></div></td><td><span class="pill pill-bad">Crítico</span></td></tr>
+              <tr><td>MAP (Fosfato monoamônico)</td><td>t</td><td>180</td><td>100</td><td><div class="prog"><div class="prog-fill" style="width:80%;"></div></div></td><td><span class="pill pill-ok">Normal</span></td></tr>
+              <tr><td>Herbicida 2,4-D</td><td>L</td><td>4.200</td><td>2.000</td><td><div class="prog"><div class="prog-fill" style="width:70%;"></div></div></td><td><span class="pill pill-ok">Normal</span></td></tr>
+              <tr><td>Fungicida Opera</td><td>L</td><td>800</td><td>1.000</td><td><div class="prog"><div class="prog-fill warn" style="width:40%;"></div></div></td><td><span class="pill pill-warn">Baixo</span></td></tr>
+              <tr><td>Sementes soja BRS 1010</td><td>sc</td><td>3.200</td><td>500</td><td><div class="prog"><div class="prog-fill" style="width:95%;"></div></div></td><td><span class="pill pill-ok">Normal</span></td></tr>
+              <tr><td>Inseticida Engeo Pleno</td><td>L</td><td>620</td><td>300</td><td><div class="prog"><div class="prog-fill" style="width:68%;"></div></div></td><td><span class="pill pill-ok">Normal</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="section-title">Ocupação dos silos de armazenagem</div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:6px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2);">Silo A — cap. 10.000 t</span><span style="font-weight:500;">87%</span></div>
+              <div class="prog"><div class="prog-fill warn" style="width:87%;"></div></div>
+              <div style="font-size:11px;color:var(--text3);margin-top:3px;">8.700 t armazenadas</div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2);">Silo B — cap. 6.000 t</span><span style="font-weight:500;">62%</span></div>
+              <div class="prog"><div class="prog-fill" style="width:62%;"></div></div>
+              <div style="font-size:11px;color:var(--text3);margin-top:3px;">3.720 t armazenadas</div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2);">Silo C — cap. 4.000 t</span><span style="font-weight:500;">41%</span></div>
+              <div class="prog"><div class="prog-fill" style="width:41%;"></div></div>
+              <div style="font-size:11px;color:var(--text3);margin-top:3px;">1.640 t armazenadas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── VENDAS ───────────────────────── -->
+      <div class="page" id="page-vendas">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Meta mensal</div><div class="metric-value">R$ 5M</div><div class="metric-sub">84% atingida</div></div>
+          <div class="metric"><div class="metric-label">Pedidos fechados</div><div class="metric-value">43</div><div class="metric-sub">+7 vs mês ant.</div></div>
+          <div class="metric"><div class="metric-label">Pipeline total</div><div class="metric-value">R$ 1,8M</div><div class="metric-sub">127 oportunidades</div></div>
+          <div class="metric"><div class="metric-label">Ticket médio</div><div class="metric-value">R$ 97k</div><div class="metric-sub">+3% vs mês ant.</div></div>
+        </div>
+        <div class="card">
+          <div class="section-title">Funil de vendas</div>
+          <div class="funil">
+            <div class="funil-step"><div class="funil-inner" style="background:var(--green-pale);"><div class="funil-num" style="color:var(--green-deep);">127</div><div class="funil-lbl" style="color:var(--green-mid);">Prospecção</div></div></div>
+            <div class="funil-arrow">›</div>
+            <div class="funil-step"><div class="funil-inner" style="background:#E1F5EE;"><div class="funil-num" style="color:#085041;">84</div><div class="funil-lbl" style="color:#0F6E56;">Qualificação</div></div></div>
+            <div class="funil-arrow">›</div>
+            <div class="funil-step"><div class="funil-inner" style="background:#FFF3CD;"><div class="funil-num" style="color:#7B5E00;">52</div><div class="funil-lbl" style="color:#7B5E00;">Proposta</div></div></div>
+            <div class="funil-arrow">›</div>
+            <div class="funil-step"><div class="funil-inner" style="background:var(--green-pale);"><div class="funil-num" style="color:var(--green-deep);">43</div><div class="funil-lbl" style="color:var(--green-mid);">Fechado</div></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Clientes e oportunidades</div>
+          <table class="tbl">
+            <thead><tr><th>Cliente</th><th>Cultura</th><th>Volume</th><th>Valor</th><th>Responsável</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Cooperativa Sul</td><td>Soja</td><td>500 t</td><td>R$ 320k</td><td>Pedro Alves</td><td><span class="pill pill-ok">Confirmado</span></td></tr>
+              <tr><td>Agro Cerrado Ltda</td><td>Milho</td><td>1.200 t</td><td>R$ 576k</td><td>Ana Lima</td><td><span class="pill pill-info">Negociando</span></td></tr>
+              <tr><td>Fazenda Bom Jesus</td><td>Soja</td><td>300 t</td><td>R$ 195k</td><td>Pedro Alves</td><td><span class="pill pill-warn">Proposta</span></td></tr>
+              <tr><td>Exportadora GrainBR</td><td>Soja</td><td>2.000 t</td><td>R$ 1,3M</td><td>Carlos Mota</td><td><span class="pill pill-info">Análise</span></td></tr>
+              <tr><td>Coop. Agrícola Norte</td><td>Milho</td><td>800 t</td><td>R$ 384k</td><td>Ana Lima</td><td><span class="pill pill-warn">Proposta</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── COMPRAS ─────────────────────── -->
+      <div class="page" id="page-compras">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Pedidos em aberto</div><div class="metric-value">28</div><div class="metric-sub">R$ 1,2M comprometido</div></div>
+          <div class="metric"><div class="metric-label">Fornecedores ativos</div><div class="metric-value">47</div><div class="metric-sub">8 em avaliação</div></div>
+          <div class="metric"><div class="metric-label">Economia gerada</div><div class="metric-value">R$ 124k</div><div class="metric-sub">vs preço de tabela</div></div>
+          <div class="metric"><div class="metric-label">Prazo médio entrega</div><div class="metric-value">6,4 dias</div><div class="metric-sub down">Meta: 5 dias</div></div>
+        </div>
+        <div class="card">
+          <div class="section-title">Pedidos de compra em andamento</div>
+          <table class="tbl">
+            <thead><tr><th>Pedido</th><th>Fornecedor</th><th>Produto</th><th>Qtd.</th><th>Valor</th><th>Previsão</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>#C0881</td><td>AgroNutrição SA</td><td>Ureia</td><td>100 t</td><td>R$ 210k</td><td>18/05/2025</td><td><span class="pill pill-info">Aguardando</span></td></tr>
+              <tr><td>#C0879</td><td>FertiSul</td><td>MAP</td><td>50 t</td><td>R$ 88,5k</td><td>25/05/2025</td><td><span class="pill pill-warn">Pendente NF</span></td></tr>
+              <tr><td>#C0875</td><td>Sementes Brasil</td><td>Soja BRS 1010</td><td>500 sc</td><td>R$ 42k</td><td>14/05/2025</td><td><span class="pill pill-ok">Entregue</span></td></tr>
+              <tr><td>#C0870</td><td>CropProt Ltda</td><td>Fungicida Opera</td><td>2.000 L</td><td>R$ 56k</td><td>30/05/2025</td><td><span class="pill pill-info">Em trânsito</span></td></tr>
+              <tr><td>#C0865</td><td>OleoAgro Ltda</td><td>Óleo diesel S-10</td><td>15.000 L</td><td>R$ 84k</td><td>16/05/2025</td><td><span class="pill pill-ok">Confirmado</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="section-title">Top fornecedores por volume (2025)</div>
+          <div class="barchart" id="comp-chart"></div>
+        </div>
+      </div>
+
+      <!-- ── PRODUÇÃO ────────────────────── -->
+      <div class="page" id="page-producao">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Área total cultivada</div><div class="metric-value">4.200 ha</div><div class="metric-sub">8 talhões ativos</div></div>
+          <div class="metric"><div class="metric-label">Produtividade média</div><div class="metric-value">61 sc/ha</div><div class="metric-sub down">Meta: 63 sc/ha</div></div>
+          <div class="metric"><div class="metric-label">Colheita prevista</div><div class="metric-value">257k sc</div><div class="metric-sub">Estimativa da safra</div></div>
+          <div class="metric"><div class="metric-label">Operações hoje</div><div class="metric-value">5</div><div class="metric-sub">2 máquinas em campo</div></div>
+        </div>
+        <div class="card">
+          <div class="section-title">Status dos talhões</div>
+          <table class="tbl">
+            <thead><tr><th>Talhão</th><th>Cultura</th><th>Área (ha)</th><th>Estágio fenológico</th><th>Colheita prevista</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Talhão 01</td><td>Soja</td><td>520</td><td>Enchimento de grão (R5)</td><td>20/05/2025</td><td><span class="pill pill-ok">No prazo</span></td></tr>
+              <tr><td>Talhão 02</td><td>Soja</td><td>480</td><td>Maturação (R7)</td><td>18/05/2025</td><td><span class="pill pill-ok">No prazo</span></td></tr>
+              <tr><td>Talhão 04</td><td>Milho</td><td>620</td><td>Florescimento (VT)</td><td>15/06/2025</td><td><span class="pill pill-warn">Monitorar</span></td></tr>
+              <tr><td>Talhão 07</td><td>Soja</td><td>390</td><td>Maturação (R7)</td><td>20/05/2025</td><td><span class="pill pill-info">Colheita em 8d</span></td></tr>
+              <tr><td>Talhão 09</td><td>Milho</td><td>700</td><td>Vegetativo (V6)</td><td>20/07/2025</td><td><span class="pill pill-ok">No prazo</span></td></tr>
+              <tr><td>Talhão 12</td><td>Soja</td><td>410</td><td>Florescimento (R1)</td><td>10/06/2025</td><td><span class="pill pill-ok">No prazo</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cards-row">
+          <div class="card">
+            <div class="section-title">Ordens de serviço abertas</div>
+            <div class="mini-stat"><span>Aplicação herbicida — Talhão 04</span><span class="pill pill-warn">Agendada</span></div>
+            <div class="mini-stat"><span>Colheita mecânica — Talhão 07</span><span class="pill pill-info">Em 8 dias</span></div>
+            <div class="mini-stat"><span>Manutenção colhedora #2</span><span class="pill pill-ok">Concluída</span></div>
+            <div class="mini-stat"><span>Adubação de cobertura — Talhão 09</span><span class="pill pill-warn">Pendente</span></div>
+            <div class="mini-stat"><span>Monitoramento de pragas — T04</span><span class="pill pill-info">Programada</span></div>
+          </div>
+          <div class="card">
+            <div class="section-title">Produtividade por talhão (sc/ha)</div>
+            <div class="barchart" id="prod-chart"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RELATÓRIOS ─────────────────── -->
+      <div class="page" id="page-relatorios">
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Relatórios gerados</div><div class="metric-value">142</div><div class="metric-sub">Neste mês</div></div>
+          <div class="metric"><div class="metric-label">Exportações</div><div class="metric-value">38</div><div class="metric-sub">PDF e Excel</div></div>
+          <div class="metric"><div class="metric-label">Agendados</div><div class="metric-value">12</div><div class="metric-sub">Envio automático</div></div>
+          <div class="metric"><div class="metric-label">Dashboards ativos</div><div class="metric-value">6</div><div class="metric-sub">Atualização diária</div></div>
+        </div>
+        <div class="cards-row">
+          <div class="card">
+            <div class="section-title">Relatórios financeiros</div>
+            <div class="mini-stat"><span>DRE — Demonstrativo de resultado</span><span class="pill pill-ok">Disponível</span></div>
+            <div class="mini-stat"><span>Fluxo de caixa projetado</span><span class="pill pill-ok">Disponível</span></div>
+            <div class="mini-stat"><span>Contas a pagar / receber</span><span class="pill pill-ok">Disponível</span></div>
+            <div class="mini-stat"><span>Análise de margem por cultura</span><span class="pill pill-ok">Disponível</span></div>
+          </div>
+          <div class="card">
+            <div class="section-title">Relatórios operacionais</div>
+            <div class="mini-stat"><span>Produtividade por talhão</span><span class="pill pill-ok">Disponível</span></div>
+            <div class="mini-stat"><span>Consumo de insumos por safra</span><span class="pill pill-ok">Disponível</span></div>
+            <div class="mini-stat"><span>Ranking de fornecedores</span><span class="pill pill-ok">Disponível</span></div>
+            <div class="mini-stat"><span>Custo de produção por hectare</span><span class="pill pill-ok">Disponível</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Relatórios recentes</div>
+          <table class="tbl">
+            <thead><tr><th>Relatório</th><th>Módulo</th><th>Gerado em</th><th>Formato</th><th>Ação</th></tr></thead>
+            <tbody>
+              <tr><td>DRE Abril/2025</td><td>Financeiro</td><td>01/05/2025</td><td>PDF</td><td><span class="pill pill-info">Baixar</span></td></tr>
+              <tr><td>Estoque — posição atual</td><td>Estoque</td><td>12/05/2025</td><td>Excel</td><td><span class="pill pill-info">Baixar</span></td></tr>
+              <tr><td>Pipeline de vendas</td><td>Vendas</td><td>10/05/2025</td><td>PDF</td><td><span class="pill pill-info">Baixar</span></td></tr>
+              <tr><td>Custo de produção safra 25/26</td><td>Produção</td><td>08/05/2025</td><td>Excel</td><td><span class="pill pill-info">Baixar</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /app-body -->
+</div><!-- /app-screen -->
+
+<script>
+  /* ── AUTH ──────────────────────────────── */
+  function doLogin() {
+    const email = document.getElementById('inp-email').value.trim();
+    const senha = document.getElementById('inp-senha').value.trim();
+    const err   = document.getElementById('login-error');
+    if (email === 'demo@agrosistema.com.br' && senha === 'agro2025') {
+      err.style.display = 'none';
+      document.getElementById('login-screen').classList.remove('active');
+      document.getElementById('app-screen').classList.add('active');
+      setTimeout(() => buildCharts('home'), 80);
+    } else {
+      err.style.display = 'block';
+    }
+  }
+
+  function doLogout() {
+    document.getElementById('app-screen').classList.remove('active');
+    document.getElementById('login-screen').classList.add('active');
+  }
+
+  /* Enter key on login */
+  ['inp-email','inp-senha'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+  });
+
+  /* ── NAVIGATION ───────────────────────── */
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    el.classList.add('active');
+    setTimeout(() => buildCharts(id), 60);
+  }
+
+  /* ── BAR CHARTS ───────────────────────── */
+  function makeBar(containerId, data) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = '';
+    const max = Math.max(...data.map(d => d.v));
+    data.forEach(d => {
+      const col = document.createElement('div');
+      col.className = 'bar-col';
+      const h = Math.round((d.v / max) * 82);
+      col.innerHTML = `<div class="bar${d.light ? ' light' : ''}" style="height:${h}px;"></div><span class="bar-lbl">${d.l}</span>`;
+      el.appendChild(col);
+    });
+  }
+
+  function buildCharts(page) {
+    if (page === 'home') {
+      makeBar('home-chart', [
+        {l:'Dez',v:3.1},{l:'Jan',v:3.4},{l:'Fev',v:3.8},{l:'Mar',v:3.6},{l:'Abr',v:3.9},{l:'Mai',v:4.2}
+      ]);
+    }
+    if (page === 'financeiro') {
+      makeBar('fin-chart', [
+        {l:'S1 Rec',v:1.1},{l:'S1 Desp',v:0.9,light:true},
+        {l:'S2 Rec',v:1.4},{l:'S2 Desp',v:0.8,light:true},
+        {l:'S3 Rec',v:1.0},{l:'S3 Desp',v:0.7,light:true},
+        {l:'S4 Rec',v:0.7},{l:'S4 Desp',v:0.5,light:true}
+      ]);
+    }
+    if (page === 'compras') {
+      makeBar('comp-chart', [
+        {l:'AgroNut.',v:580},{l:'FertiSul',v:420},{l:'Sem. BR',v:310},
+        {l:'CropProt',v:270},{l:'OleoAgro',v:180}
+      ]);
+    }
+    if (page === 'producao') {
+      makeBar('prod-chart', [
+        {l:'T01',v:63},{l:'T02',v:59},{l:'T04',v:61},
+        {l:'T07',v:58},{l:'T09',v:65},{l:'T12',v:60}
+      ]);
+    }
+  }
+</script>
+</body>
+</html>
