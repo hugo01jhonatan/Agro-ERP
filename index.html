@@ -1,937 +1,838 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AgroSistema ERP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ═══ TOKENS ════════════════════════════════ */
+:root {
+  --g1:#14532d;--g2:#16a34a;--g3:#4ade80;--g4:#dcfce7;--g5:#f0fdf4;
+  --a1:#92400e;--a2:#d97706;--a3:#fef3c7;
+  --r1:#991b1b;--r2:#ef4444;--r3:#fee2e2;
+  --b1:#1e40af;--b2:#3b82f6;--b3:#dbeafe;
+  --radius:10px;--radius-sm:7px;--radius-lg:14px;
+}
+[data-theme="light"]{
+  --bg:#f0f4f0;--surf:#fff;--surf2:#f8faf8;
+  --border:#e2e8e2;--border2:#d1d9d1;
+  --t1:#0f1f0f;--t2:#2d4a2d;--t3:#5a7a5a;--t4:#94b094;
+  --sh:0 1px 3px rgba(0,0,0,.08);--sh-md:0 4px 12px rgba(0,0,0,.1);
+  --topbar:#fff;--sidebar:#fff;
+}
+[data-theme="dark"]{
+  --bg:#0c150c;--surf:#121f12;--surf2:#182818;
+  --border:#253525;--border2:#354535;
+  --t1:#e4f4e4;--t2:#b0ccb0;--t3:#729072;--t4:#446044;
+  --sh:0 1px 3px rgba(0,0,0,.5);--sh-md:0 4px 12px rgba(0,0,0,.6);
+  --topbar:#0e180e;--sidebar:#0a120a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Sora',sans-serif;background:var(--bg);color:var(--t1);font-size:14px;line-height:1.5;transition:background .25s,color .25s}
+button,input,select,textarea{font-family:'Sora',sans-serif}
+button{cursor:pointer}
 
-  :root {
-    --green-deep: #1B4332;
-    --green-mid: #2D6A4F;
-    --green-light: #52B788;
-    --green-pale: #D8F3DC;
-    --amber: #D4A017;
-    --amber-pale: #FFF3CD;
-    --text: #1A1A1A;
-    --text2: #555;
-    --text3: #888;
-    --bg: #FAFAF8;
-    --surface: #FFFFFF;
-    --border: #E8E4DC;
-    --radius: 10px;
-    --radius-sm: 7px;
-  }
+/* ═══ SCREEN ═════════════════════════════════ */
+.screen{display:none}
+.screen.on{display:flex}
 
-  html, body {
-    height: 100%;
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 14px;
-  }
+/* ═══ LOGIN ══════════════════════════════════ */
+#s-login{min-height:100vh}
+.ll{width:44%;background:linear-gradient(150deg,#14532d,#166534 50%,#15803d);padding:56px 48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.ll::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:rgba(74,222,128,.1)}
+.ll::after{content:'';position:absolute;bottom:-60px;left:-50px;width:200px;height:200px;border-radius:50%;background:rgba(74,222,128,.07)}
+.brand{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+.brand-icon{width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.2)}
+.brand-icon i{font-size:22px;color:#fff}
+.brand-name{font-family:'Playfair Display',serif;font-size:20px;color:#fff}
+.ll-hero{position:relative;z-index:1}
+.ll-hero h1{font-family:'Playfair Display',serif;font-size:30px;color:#fff;line-height:1.3;font-weight:400;margin-bottom:12px}
+.ll-hero p{font-size:13px;color:rgba(255,255,255,.6);line-height:1.7}
+.ll-mods{display:flex;flex-direction:column;gap:7px;position:relative;z-index:1}
+.ll-mod{display:flex;align-items:center;gap:10px;padding:9px 13px;background:rgba(255,255,255,.08);border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,.1)}
+.ll-mod i{font-size:15px;color:#4ade80}
+.ll-mod span{font-size:12px;color:rgba(255,255,255,.8)}
+.lr{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 32px;background:var(--bg)}
+.lbox{width:100%;max-width:370px}
+.lbox h2{font-size:22px;font-weight:600;margin-bottom:4px}
+.lbox>p{font-size:13px;color:var(--t3);margin-bottom:24px}
+.demo-hint{background:var(--g4);border:1px solid #bbf7d0;border-radius:var(--radius-sm);padding:11px 14px;margin-bottom:20px;font-size:12px;color:var(--g1);line-height:1.8}
+.demo-hint strong{display:block;font-weight:600;margin-bottom:2px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;font-weight:600;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.fg input{width:100%;height:42px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 13px;font-size:13px;background:var(--surf);color:var(--t1);outline:none;transition:border .2s}
+.fg input:focus{border-color:var(--g2)}
+.l-err{font-size:12px;color:var(--r2);margin-bottom:10px;display:none;align-items:center;gap:5px}
+.btn-primary{width:100%;height:43px;background:var(--g1);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:500;transition:background .2s}
+.btn-primary:hover{background:var(--g2)}
+.login-note{font-size:11px;color:var(--t4);text-align:center;margin-top:14px}
 
-  /* ── SCREEN MANAGER ───────────────────────── */
-  .screen { display: none; }
-  .screen.active { display: flex; }
+/* ═══ APP ════════════════════════════════════ */
+#s-app{min-height:100vh;flex-direction:column}
+.topbar{background:var(--topbar);border-bottom:1px solid var(--border);height:52px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:100;box-shadow:var(--sh);transition:background .25s}
+.tb-l{display:flex;align-items:center;gap:10px}
+.tb-icon{width:30px;height:30px;background:var(--g2);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.tb-icon i{font-size:16px;color:#fff}
+.tb-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--g1)}
+[data-theme="dark"] .tb-title{color:var(--g3)}
+.tb-r{display:flex;align-items:center;gap:9px}
+.tb-meta{font-size:12px;color:var(--t3)}
+.theme-btn{display:flex;align-items:center;gap:6px;background:var(--surf2);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--t2);transition:all .2s}
+.theme-btn:hover{border-color:var(--g2);color:var(--g2)}
+.theme-btn i{font-size:14px}
+.tb-av{width:30px;height:30px;border-radius:50%;background:var(--g4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--g1)}
+.btn-out-sm{font-size:12px;color:var(--t3);background:none;border:1px solid var(--border);border-radius:6px;padding:5px 11px;display:flex;align-items:center;gap:5px;transition:all .2s}
+.btn-out-sm:hover{border-color:var(--r2);color:var(--r2)}
+.app-body{display:flex;flex:1;min-height:0}
 
-  /* ── LOGIN ────────────────────────────────── */
-  #login-screen {
-    min-height: 100vh;
-    flex-direction: row;
-  }
+/* ═══ SIDEBAR ════════════════════════════════ */
+.sidebar{width:188px;background:var(--sidebar);border-right:1px solid var(--border);padding:12px 0;flex-shrink:0;transition:background .25s}
+.nav-sec{font-size:10px;color:var(--t4);padding:12px 18px 4px;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 18px;font-size:13px;color:var(--t2);border-left:2px solid transparent;transition:all .15s;user-select:none}
+.nav-item:hover{background:var(--surf2);color:var(--t1)}
+.nav-item.active{color:var(--g1);background:var(--g5);border-left-color:var(--g2);font-weight:600}
+[data-theme="dark"] .nav-item.active{color:var(--g3);background:rgba(74,222,128,.07)}
+.nav-item i{font-size:16px;flex-shrink:0}
 
-  .login-left {
-    width: 42%;
-    background: var(--green-deep);
-    padding: 52px 44px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
-  }
-  .login-left::before {
-    content: '';
-    position: absolute;
-    top: -80px; right: -80px;
-    width: 280px; height: 280px;
-    border-radius: 50%;
-    background: rgba(82,183,136,0.12);
-  }
-  .login-left::after {
-    content: '';
-    position: absolute;
-    bottom: -60px; left: -60px;
-    width: 200px; height: 200px;
-    border-radius: 50%;
-    background: rgba(82,183,136,0.08);
-  }
+/* ═══ CONTENT ════════════════════════════════ */
+.content{flex:1;padding:22px;overflow-y:auto;background:var(--bg)}
+.page{display:none}
+.page.active{display:block;animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.ptitle{font-family:'Playfair Display',serif;font-size:20px;color:var(--t1)}
+[data-theme="dark"] .ptitle{color:var(--g4)}
 
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    position: relative;
-    z-index: 1;
-  }
-  .brand-icon {
-    width: 38px; height: 38px;
-    background: var(--green-light);
-    border-radius: 9px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .brand-icon i { font-size: 20px; color: #fff; }
-  .brand-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 19px;
-    color: #fff;
-    letter-spacing: 0.01em;
-  }
+/* ═══ METRIC CARDS ═══════════════════════════ */
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.metric{background:var(--surf);border:1px solid var(--border);border-radius:var(--radius);padding:14px 15px;box-shadow:var(--sh);transition:background .25s,border .25s}
+.ml{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.mv{font-size:21px;font-weight:600;color:var(--t1)}
+.ms{font-size:11px;margin-top:3px;color:var(--g2)}
+.ms.dn{color:var(--r2)}
 
-  .login-hero {
-    position: relative;
-    z-index: 1;
-  }
-  .login-hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 30px;
-    color: #fff;
-    line-height: 1.28;
-    font-weight: 400;
-    margin-bottom: 14px;
-  }
-  .login-hero p {
-    font-size: 13px;
-    color: rgba(255,255,255,0.58);
-    line-height: 1.65;
-  }
+/* ═══ CARD ═══════════════════════════════════ */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--sh);transition:background .25s,border .25s}
+.ct{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.c2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-bottom:14px}
+.dgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:13px;margin-bottom:14px}
 
-  .login-modules {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    position: relative;
-    z-index: 1;
-  }
-  .lm-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    background: rgba(255,255,255,0.07);
-    border-radius: var(--radius-sm);
-    transition: background 0.2s;
-  }
-  .lm-item i { font-size: 16px; color: var(--green-light); }
-  .lm-item span { font-size: 13px; color: rgba(255,255,255,0.76); }
+/* ═══ TABLE ══════════════════════════════════ */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 10px;color:var(--t3);border-bottom:1px solid var(--border);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;background:var(--surf2)}
+td{padding:8px 10px;color:var(--t1);border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surf2)}
 
-  .login-right {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 40px;
-    background: var(--bg);
-  }
+/* ═══ PILLS ══════════════════════════════════ */
+.pill{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:600;white-space:nowrap;display:inline-block}
+.po{background:var(--g4);color:var(--g1)}
+.pw{background:var(--a3);color:var(--a1)}
+.pb{background:var(--r3);color:var(--r1)}
+.pi{background:var(--b3);color:var(--b1)}
+.pg{background:var(--border);color:var(--t2)}
 
-  .login-box { width: 100%; max-width: 360px; }
-  .login-box h2 { font-size: 21px; font-weight: 500; margin-bottom: 5px; }
-  .login-box > p { font-size: 13px; color: var(--text3); margin-bottom: 28px; }
+/* ═══ PROGRESS ═══════════════════════════════ */
+.prog{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px}
+.pf{height:100%;border-radius:3px;background:var(--g2);transition:width .5s ease}
+.pf.w{background:var(--a2)}.pf.b{background:var(--r2)}
 
-  .demo-badge {
-    background: var(--green-pale);
-    border: 1px solid #b7dfc0;
-    border-radius: var(--radius-sm);
-    padding: 11px 14px;
-    margin-bottom: 22px;
-    font-size: 12px;
-    color: var(--green-deep);
-    line-height: 1.7;
-  }
-  .demo-badge strong { display: block; font-weight: 500; margin-bottom: 2px; }
+/* ═══ BARCHART ═══════════════════════════════ */
+.bc-wrap{display:flex;align-items:flex-end;gap:5px;height:90px;margin-top:8px}
+.bc{display:flex;flex-direction:column;align-items:center;flex:1;gap:3px}
+.bc-bar{width:100%;background:var(--g2);border-radius:3px 3px 0 0;transition:height .4s ease,background .25s}
+.bc-bar.alt{background:var(--b2)}
+.bc-l{font-size:10px;color:var(--t3)}
 
-  .form-group { margin-bottom: 15px; }
-  .form-group label {
-    display: block;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text2);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .form-group input {
-    width: 100%;
-    height: 42px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 0 13px;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    background: var(--surface);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.18s;
-  }
-  .form-group input:focus { border-color: var(--green-mid); }
+/* ═══ BUTTONS ════════════════════════════════ */
+.btn{height:36px;padding:0 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.bg{background:var(--g1);color:#fff}.bg:hover{background:var(--g2)}
+.bo{background:none;border:1px solid var(--border);color:var(--t2)}.bo:hover{border-color:var(--g2);color:var(--g1)}
+.br{background:var(--r3);color:var(--r1);border:none}.br:hover{background:var(--r2);color:#fff}
+.bs{height:28px;padding:0 10px;font-size:11px;border-radius:6px}
 
-  .login-error {
-    font-size: 12px;
-    color: #c0392b;
-    margin-bottom: 10px;
-    display: none;
-  }
+/* ═══ ALERT ══════════════════════════════════ */
+.al{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:var(--radius-sm);margin-bottom:8px;font-size:12px}
+.al:last-child{margin-bottom:0}
+.al i{font-size:15px;flex-shrink:0;margin-top:1px}
 
-  .btn-login {
-    width: 100%;
-    height: 44px;
-    background: var(--green-deep);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-    letter-spacing: 0.01em;
-  }
-  .btn-login:hover { background: var(--green-mid); }
+/* ═══ EMPTY ══════════════════════════════════ */
+.empty{text-align:center;padding:36px 20px;color:var(--t3)}
+.empty i{font-size:34px;display:block;margin-bottom:8px;opacity:.35}
+.empty p{font-size:13px}
 
-  .login-footer {
-    font-size: 11px;
-    color: var(--text3);
-    text-align: center;
-    margin-top: 18px;
-  }
+/* ═══ MINI STAT ══════════════════════════════ */
+.ms-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.ms-row:last-child{border-bottom:none}
 
-  /* ── APP ──────────────────────────────────── */
-  #app-screen {
-    min-height: 100vh;
-    flex-direction: column;
-  }
+/* ═══ MODAL ══════════════════════════════════ */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.ov.on{display:flex}
+.modal{background:var(--surf);border-radius:var(--radius-lg);width:90%;max-width:480px;box-shadow:var(--sh-md);overflow:hidden;animation:pi .2s ease}
+@keyframes pi{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+.mh{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.mh h3{font-size:15px;font-weight:600}
+.mc{background:none;border:none;font-size:22px;color:var(--t3);line-height:1;padding:0 4px}.mc:hover{color:var(--r2)}
+.mb{padding:20px;display:flex;flex-direction:column;gap:13px}
+.mf{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fg2{display:flex;flex-direction:column;gap:4px}
+.fg2 label{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.05em}
+.fg2 input,.fg2 select,.fg2 textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 11px;font-size:13px;background:var(--surf2);color:var(--t1);outline:none;transition:border .2s}
+.fg2 input:focus,.fg2 select:focus,.fg2 textarea:focus{border-color:var(--g2)}
+.fg2 textarea{height:70px;resize:vertical}
 
-  .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    height: 50px;
-    padding: 0 22px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  .topbar-left { display: flex; align-items: center; gap: 10px; }
-  .topbar-left .brand-icon { width: 28px; height: 28px; }
-  .topbar-left .brand-icon i { font-size: 15px; }
-  .topbar-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 16px;
-    color: var(--green-deep);
-  }
-  .topbar-right { display: flex; align-items: center; gap: 14px; }
-  .topbar-meta { font-size: 12px; color: var(--text3); }
-  .topbar-avatar {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    background: var(--green-pale);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 500;
-    color: var(--green-deep);
-  }
-  .btn-logout {
-    font-size: 12px;
-    color: var(--text3);
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 5px 11px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    display: flex; align-items: center; gap: 5px;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .btn-logout:hover { border-color: var(--text3); color: var(--text); }
+/* ═══ TOAST ══════════════════════════════════ */
+.toast{position:fixed;bottom:24px;right:24px;z-index:300;background:var(--g1);color:#fff;border-radius:var(--radius-sm);padding:12px 18px;font-size:13px;font-weight:500;box-shadow:var(--sh-md);display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all .3s ease;pointer-events:none}
+.toast.on{transform:none;opacity:1}
+.toast.err{background:var(--r1)}
+.toast i{font-size:15px}
 
-  .app-body {
-    display: flex;
-    flex: 1;
-    min-height: 0;
-  }
-
-  /* ── SIDEBAR ──────────────────────────────── */
-  .sidebar {
-    width: 184px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 14px 0;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-  }
-  .nav-section {
-    font-size: 10px;
-    color: var(--text3);
-    padding: 12px 18px 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-  }
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 18px;
-    font-size: 13px;
-    color: var(--text2);
-    cursor: pointer;
-    border-left: 2px solid transparent;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .nav-item:hover { background: #F5F5F0; color: var(--text); }
-  .nav-item.active {
-    color: var(--green-deep);
-    background: var(--green-pale);
-    border-left-color: var(--green-mid);
-    font-weight: 500;
-  }
-  .nav-item i { font-size: 16px; flex-shrink: 0; }
-
-  /* ── CONTENT ──────────────────────────────── */
-  .content {
-    flex: 1;
-    padding: 22px;
-    background: var(--bg);
-    overflow-y: auto;
-  }
-
-  .page { display: none; }
-  .page.active { display: block; animation: fadein 0.2s ease; }
-  @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-
-  /* ── COMPONENTS ───────────────────────────── */
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-  .metric {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 13px 15px;
-  }
-  .metric-label {
-    font-size: 11px;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 5px;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .metric-label i { font-size: 13px; }
-  .metric-value { font-size: 21px; font-weight: 500; color: var(--text); }
-  .metric-sub { font-size: 11px; color: #2D6A4F; margin-top: 3px; }
-  .metric-sub.down { color: #c0392b; }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 15px;
-    margin-bottom: 14px;
-  }
-  .section-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 13px;
-  }
-
-  .cards-row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 13px;
-    margin-bottom: 14px;
-  }
-
-  /* Table */
-  .tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .tbl th {
-    text-align: left;
-    padding: 6px 9px;
-    color: var(--text3);
-    border-bottom: 1px solid var(--border);
-    font-weight: 500;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-  }
-  .tbl td {
-    padding: 7px 9px;
-    color: var(--text);
-    border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
-  .tbl tr:last-child td { border-bottom: none; }
-  .tbl tr:hover td { background: #F8F8F5; }
-
-  /* Status pills */
-  .pill {
-    font-size: 10px;
-    padding: 2px 9px;
-    border-radius: 20px;
-    font-weight: 500;
-    white-space: nowrap;
-    display: inline-block;
-  }
-  .pill-ok   { background: #D8F3DC; color: #1B4332; }
-  .pill-warn { background: #FFF3CD; color: #7B5E00; }
-  .pill-bad  { background: #FDECEA; color: #7B1010; }
-  .pill-info { background: #EBF5FF; color: #0B4F8A; }
-
-  /* Progress bars */
-  .prog { height: 5px; background: #EDEDE8; border-radius: 3px; overflow: hidden; margin-top: 4px; }
-  .prog-fill { height: 100%; border-radius: 3px; background: var(--green-mid); transition: width 0.6s ease; }
-  .prog-fill.warn { background: var(--amber); }
-  .prog-fill.bad  { background: #e74c3c; }
-
-  /* Bar chart */
-  .barchart { display: flex; align-items: flex-end; gap: 5px; height: 92px; margin-top: 8px; }
-  .bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 3px; }
-  .bar { width: 100%; background: var(--green-mid); border-radius: 3px 3px 0 0; transition: height 0.4s ease; }
-  .bar.light { background: #A8D5BA; }
-  .bar-lbl { font-size: 10px; color: var(--text3); }
-
-  /* Alert items */
-  .alert-item {
-    display: flex; align-items: center; gap: 9px;
-    padding: 9px 11px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 7px;
-    font-size: 12px;
-  }
-  .alert-item:last-child { margin-bottom: 0; }
-  .alert-item i { font-size: 15px; flex-shrink: 0; }
-
-  /* Funil */
-  .funil { display: flex; gap: 6px; align-items: flex-end; margin-top: 12px; flex-wrap: wrap; }
-  .funil-step { flex: 1; min-width: 70px; text-align: center; }
-  .funil-inner { border-radius: var(--radius-sm); padding: 11px 6px; }
-  .funil-num { font-size: 18px; font-weight: 500; }
-  .funil-lbl { font-size: 10px; margin-top: 3px; }
-  .funil-arrow { font-size: 18px; color: var(--text3); padding-bottom: 20px; align-self: flex-end; }
-
-  /* Mini stats */
-  .mini-stat {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 12px;
-  }
-  .mini-stat:last-child { border-bottom: none; }
-
-  /* Responsive */
-  @media (max-width: 860px) {
-    .login-left { display: none; }
-    .login-right { padding: 40px 24px; }
-    .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .cards-row { grid-template-columns: 1fr; }
-    .sidebar { width: 52px; overflow: hidden; }
-    .sidebar .nav-section, .sidebar .nav-item span { display: none; }
-    .nav-item { justify-content: center; padding: 12px; }
-    .nav-item i { font-size: 18px; }
-    .topbar-meta { display: none; }
-  }
-  @media (max-width: 480px) {
-    .metrics { grid-template-columns: 1fr 1fr; }
-  }
+/* ═══ RESPONSIVE ═════════════════════════════ */
+@media(max-width:900px){
+  .ll{display:none}.metrics,.dgrid,.c2{grid-template-columns:1fr 1fr}
+  .sidebar{width:52px}.nav-sec,.nav-item span{display:none}
+  .nav-item{justify-content:center;padding:12px}.nav-item i{font-size:19px}
+  .tb-meta{display:none}
+}
+@media(max-width:540px){.metrics{grid-template-columns:1fr 1fr}.content{padding:14px}}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════ LOGIN ═══ -->
-<div id="login-screen" class="screen active">
-  <div class="login-left">
-    <div class="brand">
-      <div class="brand-icon"><i class="ti ti-plant"></i></div>
-      <span class="brand-name">AgroSistema ERP</span>
+<!-- TOAST -->
+<div class="toast" id="toast"><i id="toast-i" class="ti ti-check"></i><span id="toast-m"></span></div>
+
+<!-- ════════ MODAIS ════════ -->
+
+<!-- Venda -->
+<div class="ov" id="mv"><div class="modal">
+  <div class="mh"><h3 id="mv-title">Novo Pedido</h3><button class="mc" onclick="closeOv('mv')">×</button></div>
+  <div class="mb">
+    <input type="hidden" id="vi">
+    <div class="mrow">
+      <div class="fg2"><label>Cliente</label><input id="v-cli" placeholder="Nome do cliente"></div>
+      <div class="fg2"><label>Cultura</label><select id="v-cult"><option>Soja</option><option>Milho</option><option>Algodão</option><option>Trigo</option><option>Café</option></select></div>
     </div>
-    <div class="login-hero">
-      <h1>Gestão completa para o campo</h1>
-      <p>Do plantio à venda, controle total da sua operação agrícola em um único lugar.</p>
+    <div class="mrow">
+      <div class="fg2"><label>Volume (t)</label><input id="v-vol" type="number" min="1" placeholder="0"></div>
+      <div class="fg2"><label>Valor total (R$)</label><input id="v-val" type="number" min="1" placeholder="0"></div>
     </div>
-    <div class="login-modules">
-      <div class="lm-item"><i class="ti ti-currency-dollar"></i><span>Financeiro e contabilidade</span></div>
-      <div class="lm-item"><i class="ti ti-package"></i><span>Estoque e insumos</span></div>
-      <div class="lm-item"><i class="ti ti-chart-bar"></i><span>Vendas e CRM</span></div>
-      <div class="lm-item"><i class="ti ti-truck"></i><span>Compras e fornecedores</span></div>
-      <div class="lm-item"><i class="ti ti-settings"></i><span>Produção e PCP</span></div>
+    <div class="mrow">
+      <div class="fg2"><label>Responsável</label><input id="v-resp" placeholder="Nome"></div>
+      <div class="fg2"><label>Status</label><select id="v-st"><option>Prospecção</option><option>Qualificação</option><option>Proposta</option><option>Confirmado</option><option>Cancelado</option></select></div>
     </div>
   </div>
+  <div class="mf"><button class="btn bo" onclick="closeOv('mv')">Cancelar</button><button class="btn bg" onclick="saveVenda()"><i class="ti ti-check"></i>Salvar</button></div>
+</div></div>
 
-  <div class="login-right">
-    <div class="login-box">
+<!-- Estoque -->
+<div class="ov" id="me"><div class="modal">
+  <div class="mh"><h3 id="me-title">Movimentação de Estoque</h3><button class="mc" onclick="closeOv('me')">×</button></div>
+  <div class="mb">
+    <input type="hidden" id="ei">
+    <div class="fg2"><label>Produto</label><input id="e-prod" placeholder="Nome do insumo ou grão"></div>
+    <div class="mrow">
+      <div class="fg2"><label>Unidade</label><select id="e-un"><option>t</option><option>sc</option><option>L</option><option>kg</option><option>un</option></select></div>
+      <div class="fg2"><label>Tipo</label><select id="e-tp"><option value="entrada">Entrada</option><option value="saida">Saída</option></select></div>
+    </div>
+    <div class="mrow">
+      <div class="fg2"><label>Quantidade</label><input id="e-qtd" type="number" min="1" placeholder="0"></div>
+      <div class="fg2"><label>Estoque mínimo</label><input id="e-min" type="number" min="0" placeholder="0"></div>
+    </div>
+    <div class="fg2"><label>Observação</label><textarea id="e-obs" placeholder="Fornecedor, lote, etc."></textarea></div>
+  </div>
+  <div class="mf"><button class="btn bo" onclick="closeOv('me')">Cancelar</button><button class="btn bg" onclick="saveEst()"><i class="ti ti-check"></i>Salvar</button></div>
+</div></div>
+
+<!-- Financeiro -->
+<div class="ov" id="mf"><div class="modal">
+  <div class="mh"><h3 id="mf-title">Nova Conta</h3><button class="mc" onclick="closeOv('mf')">×</button></div>
+  <div class="mb">
+    <input type="hidden" id="fi">
+    <div class="mrow">
+      <div class="fg2"><label>Tipo</label><select id="f-tp"><option value="pagar">A Pagar</option><option value="receber">A Receber</option></select></div>
+      <div class="fg2"><label>Valor (R$)</label><input id="f-val" type="number" min="1" placeholder="0"></div>
+    </div>
+    <div class="fg2"><label>Parte (cliente / fornecedor)</label><input id="f-parte" placeholder="Nome"></div>
+    <div class="mrow">
+      <div class="fg2"><label>Vencimento</label><input id="f-venc" type="date"></div>
+      <div class="fg2"><label>Categoria</label><select id="f-cat"><option>Insumos</option><option>Mão de obra</option><option>Maquinário</option><option>Arrendamento</option><option>Venda de grãos</option><option>Outros</option></select></div>
+    </div>
+  </div>
+  <div class="mf"><button class="btn bo" onclick="closeOv('mf')">Cancelar</button><button class="btn bg" onclick="saveFin()"><i class="ti ti-check"></i>Salvar</button></div>
+</div></div>
+
+<!-- Talhão -->
+<div class="ov" id="mt"><div class="modal">
+  <div class="mh"><h3 id="mt-title">Novo Talhão</h3><button class="mc" onclick="closeOv('mt')">×</button></div>
+  <div class="mb">
+    <input type="hidden" id="ti2">
+    <div class="mrow">
+      <div class="fg2"><label>Nome do talhão</label><input id="t-nome" placeholder="Ex: Talhão 01"></div>
+      <div class="fg2"><label>Cultura</label><select id="t-cult"><option>Soja</option><option>Milho</option><option>Algodão</option><option>Trigo</option><option>Café</option></select></div>
+    </div>
+    <div class="mrow">
+      <div class="fg2"><label>Área (ha)</label><input id="t-area" type="number" min="1" placeholder="0"></div>
+      <div class="fg2"><label>Produtividade (sc/ha)</label><input id="t-prod" type="number" min="0" placeholder="0"></div>
+    </div>
+    <div class="mrow">
+      <div class="fg2"><label>Estágio fenológico</label>
+        <select id="t-est"><option>Plantio</option><option>Vegetativo</option><option>Florescimento</option><option>Enchimento de grão</option><option>Maturação</option><option>Colhido</option></select>
+      </div>
+      <div class="fg2"><label>Colheita prevista</label><input id="t-col" type="date"></div>
+    </div>
+  </div>
+  <div class="mf"><button class="btn bo" onclick="closeOv('mt')">Cancelar</button><button class="btn bg" onclick="saveTalhao()"><i class="ti ti-check"></i>Salvar</button></div>
+</div></div>
+
+<!-- ════════ LOGIN ════════ -->
+<div id="s-login" class="screen on">
+  <div class="ll">
+    <div class="brand"><div class="brand-icon"><i class="ti ti-plant"></i></div><span class="brand-name">AgroSistema ERP</span></div>
+    <div class="ll-hero"><h1>Gestão completa para o campo</h1><p>Do plantio à venda, controle total da sua operação agrícola em um único lugar.</p></div>
+    <div class="ll-mods">
+      <div class="ll-mod"><i class="ti ti-currency-dollar"></i><span>Financeiro e contabilidade</span></div>
+      <div class="ll-mod"><i class="ti ti-package"></i><span>Estoque e insumos</span></div>
+      <div class="ll-mod"><i class="ti ti-chart-bar"></i><span>Vendas e CRM</span></div>
+      <div class="ll-mod"><i class="ti ti-truck"></i><span>Compras e fornecedores</span></div>
+      <div class="ll-mod"><i class="ti ti-settings"></i><span>Produção / PCP</span></div>
+    </div>
+  </div>
+  <div class="lr">
+    <div class="lbox">
       <h2>Entrar na plataforma</h2>
       <p>Acesse sua conta para continuar</p>
-      <div class="demo-badge">
-        <strong>Acesso de demonstração</strong>
-        Usuário: <b>demo@agrosistema.com.br</b><br>
-        Senha: <b>agro2025</b>
-      </div>
-      <div class="form-group">
-        <label>E-mail</label>
-        <input type="email" id="inp-email" value="demo@agrosistema.com.br" placeholder="seu@email.com.br">
-      </div>
-      <div class="form-group">
-        <label>Senha</label>
-        <input type="password" id="inp-senha" value="agro2025" placeholder="••••••••">
-      </div>
-      <div class="login-error" id="login-error">
-        <i class="ti ti-alert-circle" style="vertical-align:-2px;margin-right:4px"></i>E-mail ou senha incorretos. Use as credenciais de demonstração acima.
-      </div>
-      <button class="btn-login" onclick="doLogin()">Entrar no sistema</button>
-      <p class="login-footer">Versão demonstração · Dados fictícios para apresentação</p>
+      <div class="demo-hint"><strong>Acesso de demonstração</strong>Usuário: <b>demo@agrosistema.com.br</b><br>Senha: <b>agro2025</b></div>
+      <div class="fg"><label>E-mail</label><input id="l-email" type="email" value="demo@agrosistema.com.br"></div>
+      <div class="fg"><label>Senha</label><input id="l-senha" type="password" value="agro2025"></div>
+      <div class="l-err" id="l-err"><i class="ti ti-alert-circle"></i> E-mail ou senha incorretos.</div>
+      <button class="btn-primary" onclick="doLogin()">Entrar no sistema</button>
+      <p class="login-note">Versão demonstração · Dados fictícios para apresentação</p>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════ APP ═══════ -->
-<div id="app-screen" class="screen" style="flex-direction:column;">
-
+<!-- ════════ APP ════════ -->
+<div id="s-app" class="screen" style="flex-direction:column">
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="brand-icon" style="width:28px;height:28px;background:var(--green-mid);border-radius:7px;display:flex;align-items:center;justify-content:center;">
-        <i class="ti ti-plant" style="font-size:15px;color:#fff;"></i>
-      </div>
-      <span class="topbar-title">AgroSistema ERP</span>
+    <div class="tb-l">
+      <div class="tb-icon"><i class="ti ti-plant"></i></div>
+      <span class="tb-title">AgroSistema ERP</span>
     </div>
-    <div class="topbar-right">
-      <span class="topbar-meta">Safra 2025/2026</span>
-      <div class="topbar-avatar">JS</div>
-      <button class="btn-logout" onclick="doLogout()">
-        <i class="ti ti-logout" style="font-size:13px;"></i> Sair
+    <div class="tb-r">
+      <span class="tb-meta">Safra 2025/2026</span>
+      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">
+        <i class="ti ti-moon" id="theme-ic"></i><span id="theme-lb">Modo escuro</span>
       </button>
+      <div class="tb-av">JS</div>
+      <button class="btn-out-sm" onclick="doLogout()"><i class="ti ti-logout" style="font-size:13px"></i>Sair</button>
     </div>
   </div>
-
   <div class="app-body">
     <div class="sidebar">
-      <div class="nav-section">Principal</div>
-      <div class="nav-item active" onclick="showPage('home',this)">
-        <i class="ti ti-home"></i><span>Visão geral</span>
-      </div>
-      <div class="nav-section">Módulos</div>
-      <div class="nav-item" onclick="showPage('financeiro',this)">
-        <i class="ti ti-currency-dollar"></i><span>Financeiro</span>
-      </div>
-      <div class="nav-item" onclick="showPage('estoque',this)">
-        <i class="ti ti-package"></i><span>Estoque</span>
-      </div>
-      <div class="nav-item" onclick="showPage('vendas',this)">
-        <i class="ti ti-chart-bar"></i><span>Vendas / CRM</span>
-      </div>
-      <div class="nav-item" onclick="showPage('compras',this)">
-        <i class="ti ti-truck"></i><span>Compras</span>
-      </div>
-      <div class="nav-item" onclick="showPage('producao',this)">
-        <i class="ti ti-settings"></i><span>Produção / PCP</span>
-      </div>
-      <div class="nav-section">Sistema</div>
-      <div class="nav-item" onclick="showPage('relatorios',this)">
-        <i class="ti ti-file-analytics"></i><span>Relatórios</span>
-      </div>
+      <div class="nav-sec">Principal</div>
+      <div class="nav-item active" onclick="goPage('home',this)"><i class="ti ti-home"></i><span>Visão geral</span></div>
+      <div class="nav-sec">Módulos</div>
+      <div class="nav-item" onclick="goPage('fin',this)"><i class="ti ti-currency-dollar"></i><span>Financeiro</span></div>
+      <div class="nav-item" onclick="goPage('est',this)"><i class="ti ti-package"></i><span>Estoque</span></div>
+      <div class="nav-item" onclick="goPage('venda',this)"><i class="ti ti-chart-bar"></i><span>Vendas / CRM</span></div>
+      <div class="nav-item" onclick="goPage('prod',this)"><i class="ti ti-settings"></i><span>Produção / PCP</span></div>
     </div>
-
     <div class="content">
 
-      <!-- ── VISÃO GERAL ─────────────────── -->
+      <!-- DASHBOARD -->
       <div class="page active" id="page-home">
-        <div class="metrics">
-          <div class="metric">
-            <div class="metric-label"><i class="ti ti-currency-dollar"></i>Receita mensal</div>
-            <div class="metric-value">R$ 4,2M</div>
-            <div class="metric-sub">+12% vs mês anterior</div>
-          </div>
-          <div class="metric">
-            <div class="metric-label"><i class="ti ti-package"></i>Estoque total</div>
-            <div class="metric-value">8.340 t</div>
-            <div class="metric-sub down">3 alertas críticos</div>
-          </div>
-          <div class="metric">
-            <div class="metric-label"><i class="ti ti-chart-bar"></i>Pedidos abertos</div>
-            <div class="metric-value">127</div>
-            <div class="metric-sub">R$ 1,8M em negociação</div>
-          </div>
-          <div class="metric">
-            <div class="metric-label"><i class="ti ti-map"></i>Áreas em cultivo</div>
-            <div class="metric-value">4.200 ha</div>
-            <div class="metric-sub down">-5% vs safra anterior</div>
-          </div>
+        <div class="ph"><span class="ptitle">Visão Geral</span><span style="font-size:12px;color:var(--t3)" id="dash-dt"></span></div>
+        <div class="metrics" id="dash-kpi"></div>
+        <div class="dgrid">
+          <div class="card"><div class="ct">Receita mensal (R$ M)</div><div class="bc-wrap" id="dash-bc"></div></div>
+          <div class="card"><div class="ct">Alertas do sistema</div><div id="dash-al"></div></div>
         </div>
-
-        <div class="cards-row">
-          <div class="card">
-            <div class="section-title">Receita mensal — últimos 6 meses</div>
-            <div class="barchart" id="home-chart"></div>
-          </div>
-          <div class="card">
-            <div class="section-title">Alertas do sistema</div>
-            <div class="alert-item" style="background:#FDECEA;">
-              <i class="ti ti-alert-circle" style="color:#c0392b;"></i>
-              <span style="color:#7B1010;">Estoque de ureia abaixo do mínimo (12 t / mín. 50 t)</span>
-            </div>
-            <div class="alert-item" style="background:#FDECEA;">
-              <i class="ti ti-alert-circle" style="color:#c0392b;"></i>
-              <span style="color:#7B1010;">Fatura #4821 vencida há 3 dias — R$ 42.000</span>
-            </div>
-            <div class="alert-item" style="background:#FFF3CD;">
-              <i class="ti ti-alert-triangle" style="color:var(--amber);"></i>
-              <span style="color:#7B5E00;">Fungicida Opera abaixo do nível ideal</span>
-            </div>
-            <div class="alert-item" style="background:#D8F3DC;">
-              <i class="ti ti-check" style="color:var(--green-mid);"></i>
-              <span style="color:var(--green-deep);">Pedido #0392 confirmado — Cooperativa Sul</span>
-            </div>
-            <div class="alert-item" style="background:#EBF5FF;">
-              <i class="ti ti-info-circle" style="color:#0B4F8A;"></i>
-              <span style="color:#0B4F8A;">Colheita do talhão 07 prevista em 8 dias</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="section-title">Últimas operações</div>
-          <table class="tbl">
-            <thead>
-              <tr><th>Data</th><th>Operação</th><th>Módulo</th><th>Valor</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>12/05/2025</td><td>Venda soja — Cooperativa Sul</td><td>Vendas</td><td>R$ 320.000</td><td><span class="pill pill-ok">Confirmado</span></td></tr>
-              <tr><td>11/05/2025</td><td>Compra fertilizante MAP</td><td>Compras</td><td>R$ 88.500</td><td><span class="pill pill-warn">Pendente</span></td></tr>
-              <tr><td>10/05/2025</td><td>Aplicação herbicida talhão 04</td><td>Produção</td><td>—</td><td><span class="pill pill-ok">Concluído</span></td></tr>
-              <tr><td>09/05/2025</td><td>Fatura fornecedor #4821</td><td>Financeiro</td><td>R$ 42.000</td><td><span class="pill pill-bad">Vencido</span></td></tr>
-              <tr><td>08/05/2025</td><td>Pedido de compra ureia 100t</td><td>Compras</td><td>R$ 210.000</td><td><span class="pill pill-info">Aguardando</span></td></tr>
-            </tbody>
-          </table>
+        <div class="card"><div class="ct">Últimas movimentações</div>
+          <div class="tw"><table><thead><tr><th>Data</th><th>Operação</th><th>Módulo</th><th>Valor</th><th>Status</th></tr></thead><tbody id="dash-ops"></tbody></table></div>
         </div>
       </div>
 
-      <!-- ── FINANCEIRO ──────────────────── -->
-      <div class="page" id="page-financeiro">
-        <div class="metrics">
-          <div class="metric"><div class="metric-label">Receitas (mês)</div><div class="metric-value">R$ 4,2M</div><div class="metric-sub">+12% vs mês ant.</div></div>
-          <div class="metric"><div class="metric-label">Despesas (mês)</div><div class="metric-value">R$ 2,9M</div><div class="metric-sub down">+8% vs mês ant.</div></div>
-          <div class="metric"><div class="metric-label">Resultado líquido</div><div class="metric-value">R$ 1,3M</div><div class="metric-sub">Margem 31%</div></div>
-          <div class="metric"><div class="metric-label">Títulos vencidos</div><div class="metric-value">R$ 127k</div><div class="metric-sub down">3 títulos em aberto</div></div>
-        </div>
-        <div class="cards-row">
-          <div class="card">
-            <div class="section-title">Fluxo de caixa — semanas de maio/2025</div>
-            <div class="barchart" id="fin-chart"></div>
-          </div>
-          <div class="card">
-            <div class="section-title">Despesas por categoria</div>
-            <div style="margin-top:6px;">
-              <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Insumos agrícolas</span><span style="font-weight:500;">45%</span></div><div class="prog"><div class="prog-fill" style="width:45%;"></div></div></div>
-              <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Mão de obra</span><span style="font-weight:500;">22%</span></div><div class="prog"><div class="prog-fill" style="width:22%;"></div></div></div>
-              <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Maquinário e combustível</span><span style="font-weight:500;">18%</span></div><div class="prog"><div class="prog-fill warn" style="width:18%;"></div></div></div>
-              <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Arrendamento</span><span style="font-weight:500;">10%</span></div><div class="prog"><div class="prog-fill" style="width:10%;"></div></div></div>
-              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span style="color:var(--text2);">Outros</span><span style="font-weight:500;">5%</span></div><div class="prog"><div class="prog-fill" style="width:5%;"></div></div></div>
+      <!-- FINANCEIRO -->
+      <div class="page" id="page-fin">
+        <div class="ph"><span class="ptitle">Financeiro</span><button class="btn bg" onclick="openFin()"><i class="ti ti-plus"></i>Nova Conta</button></div>
+        <div class="metrics" id="fin-kpi"></div>
+        <div class="card">
+          <div class="ct">Contas
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn bo bs" onclick="setFF('todos')">Todos</button>
+              <button class="btn bo bs" onclick="setFF('pagar')">A Pagar</button>
+              <button class="btn bo bs" onclick="setFF('receber')">A Receber</button>
+              <button class="btn bo bs" onclick="setFF('pago')">Pagos</button>
             </div>
           </div>
+          <div class="tw"><table><thead><tr><th>#</th><th>Tipo</th><th>Parte</th><th>Categoria</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead><tbody id="fin-tb"></tbody></table></div>
         </div>
-        <div class="card">
-          <div class="section-title">Contas a pagar e receber</div>
-          <table class="tbl">
-            <thead><tr><th>Título</th><th>Tipo</th><th>Parte</th><th>Vencimento</th><th>Valor</th><th>Situação</th></tr></thead>
-            <tbody>
-              <tr><td>#4821</td><td>Pagar</td><td>AgroNutrição SA</td><td>09/05/2025</td><td>R$ 42.000</td><td><span class="pill pill-bad">Vencido</span></td></tr>
-              <tr><td>#5102</td><td>Receber</td><td>Cooperativa Sul</td><td>20/05/2025</td><td>R$ 320.000</td><td><span class="pill pill-ok">A vencer</span></td></tr>
-              <tr><td>#5099</td><td>Pagar</td><td>FertiSul</td><td>25/05/2025</td><td>R$ 88.500</td><td><span class="pill pill-warn">Pendente NF</span></td></tr>
-              <tr><td>#5110</td><td>Receber</td><td>Exportadora GrainBR</td><td>30/05/2025</td><td>R$ 210.000</td><td><span class="pill pill-info">Negociação</span></td></tr>
-              <tr><td>#5088</td><td>Pagar</td><td>OleoAgro Ltda</td><td>15/06/2025</td><td>R$ 31.200</td><td><span class="pill pill-ok">A vencer</span></td></tr>
-            </tbody>
-          </table>
+        <div class="c2">
+          <div class="card"><div class="ct">Despesas por categoria</div><div id="fin-cat"></div></div>
+          <div class="card"><div class="ct">Resumo do mês</div><div id="fin-res"></div></div>
         </div>
       </div>
 
-      <!-- ── ESTOQUE ──────────────────────── -->
-      <div class="page" id="page-estoque">
-        <div class="metrics">
-          <div class="metric"><div class="metric-label">Insumos em estoque</div><div class="metric-value">1.240 t</div><div class="metric-sub down">3 itens críticos</div></div>
-          <div class="metric"><div class="metric-label">Grãos armazenados</div><div class="metric-value">7.100 t</div><div class="metric-sub">Silos A, B e C</div></div>
-          <div class="metric"><div class="metric-label">Valor total em estoque</div><div class="metric-value">R$ 6,8M</div><div class="metric-sub">+4% vs mês ant.</div></div>
-          <div class="metric"><div class="metric-label">Giro médio</div><div class="metric-value">18 dias</div><div class="metric-sub down">Meta: 15 dias</div></div>
+      <!-- ESTOQUE -->
+      <div class="page" id="page-est">
+        <div class="ph"><span class="ptitle">Estoque</span><button class="btn bg" onclick="openEst()"><i class="ti ti-plus"></i>Nova Movimentação</button></div>
+        <div class="metrics" id="est-kpi"></div>
+        <div class="card"><div class="ct">Posição atual</div>
+          <div class="tw"><table><thead><tr><th>Produto</th><th>Un.</th><th>Qtd. atual</th><th>Mínimo</th><th>Nível</th><th>Status</th><th>Ações</th></tr></thead><tbody id="est-tb"></tbody></table></div>
         </div>
-        <div class="card">
-          <div class="section-title">Posição de insumos</div>
-          <table class="tbl">
-            <thead><tr><th>Produto</th><th>Unidade</th><th>Qtd. atual</th><th>Estoque mín.</th><th>Nível</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>Ureia</td><td>t</td><td>12</td><td>50</td><td><div class="prog"><div class="prog-fill bad" style="width:24%;"></div></div></td><td><span class="pill pill-bad">Crítico</span></td></tr>
-              <tr><td>MAP (Fosfato monoamônico)</td><td>t</td><td>180</td><td>100</td><td><div class="prog"><div class="prog-fill" style="width:80%;"></div></div></td><td><span class="pill pill-ok">Normal</span></td></tr>
-              <tr><td>Herbicida 2,4-D</td><td>L</td><td>4.200</td><td>2.000</td><td><div class="prog"><div class="prog-fill" style="width:70%;"></div></div></td><td><span class="pill pill-ok">Normal</span></td></tr>
-              <tr><td>Fungicida Opera</td><td>L</td><td>800</td><td>1.000</td><td><div class="prog"><div class="prog-fill warn" style="width:40%;"></div></div></td><td><span class="pill pill-warn">Baixo</span></td></tr>
-              <tr><td>Sementes soja BRS 1010</td><td>sc</td><td>3.200</td><td>500</td><td><div class="prog"><div class="prog-fill" style="width:95%;"></div></div></td><td><span class="pill pill-ok">Normal</span></td></tr>
-              <tr><td>Inseticida Engeo Pleno</td><td>L</td><td>620</td><td>300</td><td><div class="prog"><div class="prog-fill" style="width:68%;"></div></div></td><td><span class="pill pill-ok">Normal</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card">
-          <div class="section-title">Ocupação dos silos de armazenagem</div>
-          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:6px;">
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2);">Silo A — cap. 10.000 t</span><span style="font-weight:500;">87%</span></div>
-              <div class="prog"><div class="prog-fill warn" style="width:87%;"></div></div>
-              <div style="font-size:11px;color:var(--text3);margin-top:3px;">8.700 t armazenadas</div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2);">Silo B — cap. 6.000 t</span><span style="font-weight:500;">62%</span></div>
-              <div class="prog"><div class="prog-fill" style="width:62%;"></div></div>
-              <div style="font-size:11px;color:var(--text3);margin-top:3px;">3.720 t armazenadas</div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text2);">Silo C — cap. 4.000 t</span><span style="font-weight:500;">41%</span></div>
-              <div class="prog"><div class="prog-fill" style="width:41%;"></div></div>
-              <div style="font-size:11px;color:var(--text3);margin-top:3px;">1.640 t armazenadas</div>
-            </div>
-          </div>
+        <div class="card"><div class="ct">Histórico de movimentações</div>
+          <div class="tw"><table><thead><tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Qtd.</th><th>Observação</th></tr></thead><tbody id="est-hist"></tbody></table></div>
         </div>
       </div>
 
-      <!-- ── VENDAS ───────────────────────── -->
-      <div class="page" id="page-vendas">
-        <div class="metrics">
-          <div class="metric"><div class="metric-label">Meta mensal</div><div class="metric-value">R$ 5M</div><div class="metric-sub">84% atingida</div></div>
-          <div class="metric"><div class="metric-label">Pedidos fechados</div><div class="metric-value">43</div><div class="metric-sub">+7 vs mês ant.</div></div>
-          <div class="metric"><div class="metric-label">Pipeline total</div><div class="metric-value">R$ 1,8M</div><div class="metric-sub">127 oportunidades</div></div>
-          <div class="metric"><div class="metric-label">Ticket médio</div><div class="metric-value">R$ 97k</div><div class="metric-sub">+3% vs mês ant.</div></div>
-        </div>
-        <div class="card">
-          <div class="section-title">Funil de vendas</div>
-          <div class="funil">
-            <div class="funil-step"><div class="funil-inner" style="background:var(--green-pale);"><div class="funil-num" style="color:var(--green-deep);">127</div><div class="funil-lbl" style="color:var(--green-mid);">Prospecção</div></div></div>
-            <div class="funil-arrow">›</div>
-            <div class="funil-step"><div class="funil-inner" style="background:#E1F5EE;"><div class="funil-num" style="color:#085041;">84</div><div class="funil-lbl" style="color:#0F6E56;">Qualificação</div></div></div>
-            <div class="funil-arrow">›</div>
-            <div class="funil-step"><div class="funil-inner" style="background:#FFF3CD;"><div class="funil-num" style="color:#7B5E00;">52</div><div class="funil-lbl" style="color:#7B5E00;">Proposta</div></div></div>
-            <div class="funil-arrow">›</div>
-            <div class="funil-step"><div class="funil-inner" style="background:var(--green-pale);"><div class="funil-num" style="color:var(--green-deep);">43</div><div class="funil-lbl" style="color:var(--green-mid);">Fechado</div></div></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="section-title">Clientes e oportunidades</div>
-          <table class="tbl">
-            <thead><tr><th>Cliente</th><th>Cultura</th><th>Volume</th><th>Valor</th><th>Responsável</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>Cooperativa Sul</td><td>Soja</td><td>500 t</td><td>R$ 320k</td><td>Pedro Alves</td><td><span class="pill pill-ok">Confirmado</span></td></tr>
-              <tr><td>Agro Cerrado Ltda</td><td>Milho</td><td>1.200 t</td><td>R$ 576k</td><td>Ana Lima</td><td><span class="pill pill-info">Negociando</span></td></tr>
-              <tr><td>Fazenda Bom Jesus</td><td>Soja</td><td>300 t</td><td>R$ 195k</td><td>Pedro Alves</td><td><span class="pill pill-warn">Proposta</span></td></tr>
-              <tr><td>Exportadora GrainBR</td><td>Soja</td><td>2.000 t</td><td>R$ 1,3M</td><td>Carlos Mota</td><td><span class="pill pill-info">Análise</span></td></tr>
-              <tr><td>Coop. Agrícola Norte</td><td>Milho</td><td>800 t</td><td>R$ 384k</td><td>Ana Lima</td><td><span class="pill pill-warn">Proposta</span></td></tr>
-            </tbody>
-          </table>
+      <!-- VENDAS -->
+      <div class="page" id="page-venda">
+        <div class="ph"><span class="ptitle">Vendas / CRM</span><button class="btn bg" onclick="openVenda()"><i class="ti ti-plus"></i>Novo Pedido</button></div>
+        <div class="metrics" id="venda-kpi"></div>
+        <div class="card"><div class="ct">Funil de vendas</div><div style="display:flex;gap:6px;align-items:flex-end;flex-wrap:wrap;margin-top:4px" id="funil"></div></div>
+        <div class="card"><div class="ct">Pedidos e oportunidades</div>
+          <div class="tw"><table><thead><tr><th>#</th><th>Cliente</th><th>Cultura</th><th>Volume</th><th>Valor</th><th>Responsável</th><th>Status</th><th>Ações</th></tr></thead><tbody id="venda-tb"></tbody></table></div>
         </div>
       </div>
 
-      <!-- ── COMPRAS ─────────────────────── -->
-      <div class="page" id="page-compras">
-        <div class="metrics">
-          <div class="metric"><div class="metric-label">Pedidos em aberto</div><div class="metric-value">28</div><div class="metric-sub">R$ 1,2M comprometido</div></div>
-          <div class="metric"><div class="metric-label">Fornecedores ativos</div><div class="metric-value">47</div><div class="metric-sub">8 em avaliação</div></div>
-          <div class="metric"><div class="metric-label">Economia gerada</div><div class="metric-value">R$ 124k</div><div class="metric-sub">vs preço de tabela</div></div>
-          <div class="metric"><div class="metric-label">Prazo médio entrega</div><div class="metric-value">6,4 dias</div><div class="metric-sub down">Meta: 5 dias</div></div>
+      <!-- PRODUÇÃO -->
+      <div class="page" id="page-prod">
+        <div class="ph"><span class="ptitle">Produção / PCP</span><button class="btn bg" onclick="openTalhao()"><i class="ti ti-plus"></i>Novo Talhão</button></div>
+        <div class="metrics" id="prod-kpi"></div>
+        <div class="card"><div class="ct">Status dos talhões</div>
+          <div class="tw"><table><thead><tr><th>Talhão</th><th>Cultura</th><th>Área (ha)</th><th>Estágio</th><th>Produt.</th><th>Colheita prev.</th><th>Status</th><th>Ações</th></tr></thead><tbody id="prod-tb"></tbody></table></div>
         </div>
-        <div class="card">
-          <div class="section-title">Pedidos de compra em andamento</div>
-          <table class="tbl">
-            <thead><tr><th>Pedido</th><th>Fornecedor</th><th>Produto</th><th>Qtd.</th><th>Valor</th><th>Previsão</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>#C0881</td><td>AgroNutrição SA</td><td>Ureia</td><td>100 t</td><td>R$ 210k</td><td>18/05/2025</td><td><span class="pill pill-info">Aguardando</span></td></tr>
-              <tr><td>#C0879</td><td>FertiSul</td><td>MAP</td><td>50 t</td><td>R$ 88,5k</td><td>25/05/2025</td><td><span class="pill pill-warn">Pendente NF</span></td></tr>
-              <tr><td>#C0875</td><td>Sementes Brasil</td><td>Soja BRS 1010</td><td>500 sc</td><td>R$ 42k</td><td>14/05/2025</td><td><span class="pill pill-ok">Entregue</span></td></tr>
-              <tr><td>#C0870</td><td>CropProt Ltda</td><td>Fungicida Opera</td><td>2.000 L</td><td>R$ 56k</td><td>30/05/2025</td><td><span class="pill pill-info">Em trânsito</span></td></tr>
-              <tr><td>#C0865</td><td>OleoAgro Ltda</td><td>Óleo diesel S-10</td><td>15.000 L</td><td>R$ 84k</td><td>16/05/2025</td><td><span class="pill pill-ok">Confirmado</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card">
-          <div class="section-title">Top fornecedores por volume (2025)</div>
-          <div class="barchart" id="comp-chart"></div>
+        <div class="c2">
+          <div class="card"><div class="ct">Produtividade por talhão (sc/ha)</div><div class="bc-wrap" id="prod-bc"></div></div>
+          <div class="card"><div class="ct">Resumo da safra</div><div id="prod-res"></div></div>
         </div>
       </div>
 
-      <!-- ── PRODUÇÃO ────────────────────── -->
-      <div class="page" id="page-producao">
-        <div class="metrics">
-          <div class="metric"><div class="metric-label">Área total cultivada</div><div class="metric-value">4.200 ha</div><div class="metric-sub">8 talhões ativos</div></div>
-          <div class="metric"><div class="metric-label">Produtividade média</div><div class="metric-value">61 sc/ha</div><div class="metric-sub down">Meta: 63 sc/ha</div></div>
-          <div class="metric"><div class="metric-label">Colheita prevista</div><div class="metric-value">257k sc</div><div class="metric-sub">Estimativa da safra</div></div>
-          <div class="metric"><div class="metric-label">Operações hoje</div><div class="metric-value">5</div><div class="metric-sub">2 máquinas em campo</div></div>
-        </div>
-        <div class="card">
-          <div class="section-title">Status dos talhões</div>
-          <table class="tbl">
-            <thead><tr><th>Talhão</th><th>Cultura</th><th>Área (ha)</th><th>Estágio fenológico</th><th>Colheita prevista</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>Talhão 01</td><td>Soja</td><td>520</td><td>Enchimento de grão (R5)</td><td>20/05/2025</td><td><span class="pill pill-ok">No prazo</span></td></tr>
-              <tr><td>Talhão 02</td><td>Soja</td><td>480</td><td>Maturação (R7)</td><td>18/05/2025</td><td><span class="pill pill-ok">No prazo</span></td></tr>
-              <tr><td>Talhão 04</td><td>Milho</td><td>620</td><td>Florescimento (VT)</td><td>15/06/2025</td><td><span class="pill pill-warn">Monitorar</span></td></tr>
-              <tr><td>Talhão 07</td><td>Soja</td><td>390</td><td>Maturação (R7)</td><td>20/05/2025</td><td><span class="pill pill-info">Colheita em 8d</span></td></tr>
-              <tr><td>Talhão 09</td><td>Milho</td><td>700</td><td>Vegetativo (V6)</td><td>20/07/2025</td><td><span class="pill pill-ok">No prazo</span></td></tr>
-              <tr><td>Talhão 12</td><td>Soja</td><td>410</td><td>Florescimento (R1)</td><td>10/06/2025</td><td><span class="pill pill-ok">No prazo</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="cards-row">
-          <div class="card">
-            <div class="section-title">Ordens de serviço abertas</div>
-            <div class="mini-stat"><span>Aplicação herbicida — Talhão 04</span><span class="pill pill-warn">Agendada</span></div>
-            <div class="mini-stat"><span>Colheita mecânica — Talhão 07</span><span class="pill pill-info">Em 8 dias</span></div>
-            <div class="mini-stat"><span>Manutenção colhedora #2</span><span class="pill pill-ok">Concluída</span></div>
-            <div class="mini-stat"><span>Adubação de cobertura — Talhão 09</span><span class="pill pill-warn">Pendente</span></div>
-            <div class="mini-stat"><span>Monitoramento de pragas — T04</span><span class="pill pill-info">Programada</span></div>
-          </div>
-          <div class="card">
-            <div class="section-title">Produtividade por talhão (sc/ha)</div>
-            <div class="barchart" id="prod-chart"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── RELATÓRIOS ─────────────────── -->
-      <div class="page" id="page-relatorios">
-        <div class="metrics">
-          <div class="metric"><div class="metric-label">Relatórios gerados</div><div class="metric-value">142</div><div class="metric-sub">Neste mês</div></div>
-          <div class="metric"><div class="metric-label">Exportações</div><div class="metric-value">38</div><div class="metric-sub">PDF e Excel</div></div>
-          <div class="metric"><div class="metric-label">Agendados</div><div class="metric-value">12</div><div class="metric-sub">Envio automático</div></div>
-          <div class="metric"><div class="metric-label">Dashboards ativos</div><div class="metric-value">6</div><div class="metric-sub">Atualização diária</div></div>
-        </div>
-        <div class="cards-row">
-          <div class="card">
-            <div class="section-title">Relatórios financeiros</div>
-            <div class="mini-stat"><span>DRE — Demonstrativo de resultado</span><span class="pill pill-ok">Disponível</span></div>
-            <div class="mini-stat"><span>Fluxo de caixa projetado</span><span class="pill pill-ok">Disponível</span></div>
-            <div class="mini-stat"><span>Contas a pagar / receber</span><span class="pill pill-ok">Disponível</span></div>
-            <div class="mini-stat"><span>Análise de margem por cultura</span><span class="pill pill-ok">Disponível</span></div>
-          </div>
-          <div class="card">
-            <div class="section-title">Relatórios operacionais</div>
-            <div class="mini-stat"><span>Produtividade por talhão</span><span class="pill pill-ok">Disponível</span></div>
-            <div class="mini-stat"><span>Consumo de insumos por safra</span><span class="pill pill-ok">Disponível</span></div>
-            <div class="mini-stat"><span>Ranking de fornecedores</span><span class="pill pill-ok">Disponível</span></div>
-            <div class="mini-stat"><span>Custo de produção por hectare</span><span class="pill pill-ok">Disponível</span></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="section-title">Relatórios recentes</div>
-          <table class="tbl">
-            <thead><tr><th>Relatório</th><th>Módulo</th><th>Gerado em</th><th>Formato</th><th>Ação</th></tr></thead>
-            <tbody>
-              <tr><td>DRE Abril/2025</td><td>Financeiro</td><td>01/05/2025</td><td>PDF</td><td><span class="pill pill-info">Baixar</span></td></tr>
-              <tr><td>Estoque — posição atual</td><td>Estoque</td><td>12/05/2025</td><td>Excel</td><td><span class="pill pill-info">Baixar</span></td></tr>
-              <tr><td>Pipeline de vendas</td><td>Vendas</td><td>10/05/2025</td><td>PDF</td><td><span class="pill pill-info">Baixar</span></td></tr>
-              <tr><td>Custo de produção safra 25/26</td><td>Produção</td><td>08/05/2025</td><td>Excel</td><td><span class="pill pill-info">Baixar</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div><!-- /content -->
-  </div><!-- /app-body -->
-</div><!-- /app-screen -->
+    </div>
+  </div>
+</div>
 
 <script>
-  /* ── AUTH ──────────────────────────────── */
-  function doLogin() {
-    const email = document.getElementById('inp-email').value.trim();
-    const senha = document.getElementById('inp-senha').value.trim();
-    const err   = document.getElementById('login-error');
-    if (email === 'demo@agrosistema.com.br' && senha === 'agro2025') {
-      err.style.display = 'none';
-      document.getElementById('login-screen').classList.remove('active');
-      document.getElementById('app-screen').classList.add('active');
-      setTimeout(() => buildCharts('home'), 80);
-    } else {
-      err.style.display = 'block';
-    }
-  }
+/* ═══ STATE ═════════════════════════════════ */
+let DB = {
+  vendas:[
+    {cli:'Cooperativa Sul',cult:'Soja',vol:500,val:320000,resp:'Pedro Alves',st:'Confirmado'},
+    {cli:'Agro Cerrado Ltda',cult:'Milho',vol:1200,val:576000,resp:'Ana Lima',st:'Prospecção'},
+    {cli:'Fazenda Bom Jesus',cult:'Soja',vol:300,val:195000,resp:'Pedro Alves',st:'Proposta'},
+    {cli:'Exportadora GrainBR',cult:'Soja',vol:2000,val:1300000,resp:'Carlos Mota',st:'Qualificação'},
+    {cli:'Coop. Norte',cult:'Milho',vol:800,val:384000,resp:'Ana Lima',st:'Proposta'},
+  ],
+  estoque:[
+    {prod:'Ureia',un:'t',qtd:12,min:50,obs:'Estoque inicial'},
+    {prod:'MAP',un:'t',qtd:180,min:100,obs:'Compra FertiSul'},
+    {prod:'Herbicida 2,4-D',un:'L',qtd:4200,min:2000,obs:'Compra CropProt'},
+    {prod:'Fungicida Opera',un:'L',qtd:800,min:1000,obs:'Estoque inicial'},
+    {prod:'Sementes Soja BRS 1010',un:'sc',qtd:3200,min:500,obs:'Safra 25/26'},
+  ],
+  hist:[
+    {data:'2025-05-10',prod:'Ureia',tp:'saida',qtd:38,obs:'Aplicação talhão 01'},
+    {data:'2025-05-08',prod:'Sementes Soja BRS 1010',tp:'entrada',qtd:1000,obs:'Compra Sementes Brasil'},
+    {data:'2025-05-05',prod:'Herbicida 2,4-D',tp:'saida',qtd:600,obs:'Aplicação talhão 04'},
+  ],
+  fin:[
+    {tp:'pagar',parte:'AgroNutrição SA',cat:'Insumos',venc:'2025-05-09',val:42000,st:'vencido'},
+    {tp:'receber',parte:'Cooperativa Sul',cat:'Venda de grãos',venc:'2025-05-20',val:320000,st:'aberto'},
+    {tp:'pagar',parte:'FertiSul',cat:'Insumos',venc:'2025-05-25',val:88500,st:'aberto'},
+    {tp:'receber',parte:'Exportadora GrainBR',cat:'Venda de grãos',venc:'2025-05-30',val:210000,st:'aberto'},
+    {tp:'pagar',parte:'OleoAgro Ltda',cat:'Maquinário',venc:'2025-06-15',val:31200,st:'pago'},
+    {tp:'receber',parte:'Coop. Norte',cat:'Venda de grãos',venc:'2025-06-10',val:384000,st:'aberto'},
+  ],
+  talhoes:[
+    {nome:'Talhão 01',cult:'Soja',area:520,prod:63,est:'Enchimento de grão',col:'2025-05-20'},
+    {nome:'Talhão 02',cult:'Soja',area:480,prod:59,est:'Maturação',col:'2025-05-18'},
+    {nome:'Talhão 04',cult:'Milho',area:620,prod:61,est:'Florescimento',col:'2025-06-15'},
+    {nome:'Talhão 07',cult:'Soja',area:390,prod:58,est:'Maturação',col:'2025-05-22'},
+    {nome:'Talhão 09',cult:'Milho',area:700,prod:65,est:'Vegetativo',col:'2025-07-20'},
+  ]
+};
+let FF='todos', theme='light';
 
-  function doLogout() {
-    document.getElementById('app-screen').classList.remove('active');
-    document.getElementById('login-screen').classList.add('active');
-  }
+/* ═══ UTILS ═════════════════════════════════ */
+const R=v=>'R$ '+Number(v).toLocaleString('pt-BR');
+const N=v=>Number(v).toLocaleString('pt-BR');
+const today=()=>new Date().toLocaleDateString('pt-BR');
+const fmt_date=d=>d?new Date(d+'T12:00').toLocaleDateString('pt-BR'):'—';
+const num=id=>Number(document.getElementById(id).value)||0;
+const val=id=>document.getElementById(id).value.trim();
+const set=id=>v=>document.getElementById(id).value=v;
 
-  /* Enter key on login */
-  ['inp-email','inp-senha'].forEach(id => {
-    document.getElementById(id).addEventListener('keydown', e => {
-      if (e.key === 'Enter') doLogin();
-    });
-  });
+function pill(lbl,cls){return`<span class="pill ${cls}">${lbl}</span>`}
+function pVenda(s){const m={Confirmado:'po',Prospecção:'pi',Qualificação:'pi',Proposta:'pw',Cancelado:'pb'};return pill(s,m[s]||'pg')}
+function pFin(s){return pill({pago:'Pago',aberto:'Em aberto',vencido:'Vencido'}[s]||s,{pago:'po',aberto:'pw',vencido:'pb'}[s]||'pg')}
+function pEst(q,m){if(q<=0)return pill('Zerado','pb');if(q<m)return pill('Crítico','pb');if(q<m*1.3)return pill('Baixo','pw');return pill('Normal','po')}
+function pProd(e){return pill(e,{Colhido:'po',Maturação:'pi',Plantio:'pg'}[e]||'pw')}
 
-  /* ── NAVIGATION ───────────────────────── */
-  function showPage(id, el) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('page-' + id).classList.add('active');
-    el.classList.add('active');
-    setTimeout(() => buildCharts(id), 60);
-  }
+function mkBar(id,data){
+  const el=document.getElementById(id);if(!el)return;
+  const mx=Math.max(...data.map(d=>d.v),1);
+  el.innerHTML=data.map(d=>`<div class="bc"><div class="bc-bar${d.alt?' alt':''}" style="height:${Math.round(d.v/mx*82)}px"></div><span class="bc-l">${d.l}</span></div>`).join('');
+}
 
-  /* ── BAR CHARTS ───────────────────────── */
-  function makeBar(containerId, data) {
-    const el = document.getElementById(containerId);
-    if (!el) return;
-    el.innerHTML = '';
-    const max = Math.max(...data.map(d => d.v));
-    data.forEach(d => {
-      const col = document.createElement('div');
-      col.className = 'bar-col';
-      const h = Math.round((d.v / max) * 82);
-      col.innerHTML = `<div class="bar${d.light ? ' light' : ''}" style="height:${h}px;"></div><span class="bar-lbl">${d.l}</span>`;
-      el.appendChild(col);
-    });
-  }
+function toast(msg,err=false){
+  const t=document.getElementById('toast');
+  t.className='toast'+(err?' err':'');
+  document.getElementById('toast-i').className='ti ti-'+(err?'x':'check');
+  document.getElementById('toast-m').textContent=msg;
+  void t.offsetWidth;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),3000);
+}
 
-  function buildCharts(page) {
-    if (page === 'home') {
-      makeBar('home-chart', [
-        {l:'Dez',v:3.1},{l:'Jan',v:3.4},{l:'Fev',v:3.8},{l:'Mar',v:3.6},{l:'Abr',v:3.9},{l:'Mai',v:4.2}
-      ]);
-    }
-    if (page === 'financeiro') {
-      makeBar('fin-chart', [
-        {l:'S1 Rec',v:1.1},{l:'S1 Desp',v:0.9,light:true},
-        {l:'S2 Rec',v:1.4},{l:'S2 Desp',v:0.8,light:true},
-        {l:'S3 Rec',v:1.0},{l:'S3 Desp',v:0.7,light:true},
-        {l:'S4 Rec',v:0.7},{l:'S4 Desp',v:0.5,light:true}
-      ]);
-    }
-    if (page === 'compras') {
-      makeBar('comp-chart', [
-        {l:'AgroNut.',v:580},{l:'FertiSul',v:420},{l:'Sem. BR',v:310},
-        {l:'CropProt',v:270},{l:'OleoAgro',v:180}
-      ]);
-    }
-    if (page === 'producao') {
-      makeBar('prod-chart', [
-        {l:'T01',v:63},{l:'T02',v:59},{l:'T04',v:61},
-        {l:'T07',v:58},{l:'T09',v:65},{l:'T12',v:60}
-      ]);
-    }
+/* ═══ AUTH ══════════════════════════════════ */
+function doLogin(){
+  const e=val('l-email'),s=val('l-senha'),er=document.getElementById('l-err');
+  if(e==='demo@agrosistema.com.br'&&s==='agro2025'){
+    er.style.display='none';
+    document.getElementById('s-login').classList.remove('on');
+    document.getElementById('s-app').classList.add('on');
+    renderDash();
+  } else er.style.display='flex';
+}
+function doLogout(){
+  document.getElementById('s-app').classList.remove('on');
+  document.getElementById('s-login').classList.add('on');
+}
+['l-email','l-senha'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()}));
+
+/* ═══ THEME ══════════════════════════════════ */
+function toggleTheme(){
+  theme=theme==='light'?'dark':'light';
+  document.documentElement.setAttribute('data-theme',theme);
+  document.getElementById('theme-ic').className='ti ti-'+(theme==='dark'?'sun':'moon');
+  document.getElementById('theme-lb').textContent=theme==='dark'?'Modo claro':'Modo escuro';
+}
+
+/* ═══ NAV ════════════════════════════════════ */
+function goPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+  ({home:renderDash,fin:renderFin,est:renderEst,venda:renderVenda,prod:renderProd}[id]||renderDash)();
+}
+
+/* ═══ MODAL ══════════════════════════════════ */
+function openOv(id){document.getElementById(id).classList.add('on')}
+function closeOv(id){document.getElementById(id).classList.remove('on')}
+document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)this.classList.remove('on')}));
+
+/* ═══════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════ */
+function renderDash(){
+  document.getElementById('dash-dt').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const conf=DB.vendas.filter(v=>v.st==='Confirmado');
+  const crit=DB.estoque.filter(e=>e.qtd<e.min).length;
+  const totalArea=DB.talhoes.reduce((s,t)=>s+t.area,0);
+  document.getElementById('dash-kpi').innerHTML=`
+    <div class="metric"><div class="ml">Vendas confirmadas</div><div class="mv">${R(conf.reduce((s,v)=>s+v.val,0))}</div><div class="ms">${conf.length} pedidos</div></div>
+    <div class="metric"><div class="ml">Itens críticos</div><div class="mv">${crit}</div><div class="ms ${crit>0?'dn':''}">no estoque</div></div>
+    <div class="metric"><div class="ml">Pipeline</div><div class="mv">${DB.vendas.filter(v=>v.st!=='Cancelado').length}</div><div class="ms">oportunidades</div></div>
+    <div class="metric"><div class="ml">Área total</div><div class="mv">${N(totalArea)} ha</div><div class="ms">${DB.talhoes.length} talhões</div></div>`;
+
+  mkBar('dash-bc',[{l:'Dez',v:3.1},{l:'Jan',v:3.4},{l:'Fev',v:3.8},{l:'Mar',v:3.6},{l:'Abr',v:3.9},{l:'Mai',v:(conf.reduce((s,v)=>s+v.val,0)/1e6)||0.1}]);
+
+  const alerts=[];
+  DB.estoque.filter(e=>e.qtd<e.min).forEach(e=>alerts.push({t:'bad',m:`<b>${e.prod}</b> abaixo do mínimo (${e.qtd} ${e.un} / mín ${e.min})`}));
+  DB.fin.filter(f=>f.st==='vencido').forEach(f=>alerts.push({t:'bad',m:`Conta vencida: <b>${f.parte}</b> — ${R(f.val)}`}));
+  DB.talhoes.filter(t=>t.est==='Maturação').forEach(t=>alerts.push({t:'info',m:`Colheita próxima: <b>${t.nome}</b>`}));
+  if(!alerts.length) alerts.push({t:'ok',m:'Nenhum alerta no momento'});
+
+  document.getElementById('dash-al').innerHTML=alerts.map(a=>`
+    <div class="al" style="background:${a.t==='bad'?'var(--r3)':a.t==='info'?'var(--b3)':'var(--g4)'}">
+      <i class="ti ti-${a.t==='bad'?'alert-circle':a.t==='info'?'info-circle':'check'}" style="color:${a.t==='bad'?'var(--r2)':a.t==='info'?'var(--b2)':'var(--g2)'}"></i>
+      <span style="color:${a.t==='bad'?'var(--r1)':a.t==='info'?'var(--b1)':'var(--g1)'}">${a.m}</span>
+    </div>`).join('');
+
+  const ops=[
+    ...DB.vendas.slice(-3).map(v=>({dt:today(),op:`Venda — ${v.cli}`,mod:'Vendas',v:R(v.val),st:pVenda(v.st)})),
+    ...DB.hist.slice(-3).map(h=>({dt:fmt_date(h.data),op:`${h.tp==='entrada'?'Entrada':'Saída'}: ${h.prod}`,mod:'Estoque',v:`${h.qtd}`,st:pill(h.tp,h.tp==='entrada'?'po':'pw')}))
+  ];
+  document.getElementById('dash-ops').innerHTML=ops.slice(0,6).map(o=>`<tr><td>${o.dt}</td><td>${o.op}</td><td>${pill(o.mod,'pg')}</td><td>${o.v}</td><td>${o.st}</td></tr>`).join('');
+}
+
+/* ═══════════════════════════════════════════
+   FINANCEIRO
+══════════════════════════════════════════ */
+function renderFin(){
+  const rec=DB.fin.filter(f=>f.tp==='receber'&&f.st!=='pago').reduce((s,f)=>s+f.val,0);
+  const pag=DB.fin.filter(f=>f.tp==='pagar'&&f.st!=='pago').reduce((s,f)=>s+f.val,0);
+  const venc=DB.fin.filter(f=>f.st==='vencido');
+  document.getElementById('fin-kpi').innerHTML=`
+    <div class="metric"><div class="ml">A receber</div><div class="mv">${R(rec)}</div><div class="ms">em aberto</div></div>
+    <div class="metric"><div class="ml">A pagar</div><div class="mv">${R(pag)}</div><div class="ms dn">comprometido</div></div>
+    <div class="metric"><div class="ml">Vencidos</div><div class="mv">${R(venc.reduce((s,f)=>s+f.val,0))}</div><div class="ms dn">${venc.length} títulos</div></div>
+    <div class="metric"><div class="ml">Pagos (mês)</div><div class="mv">${DB.fin.filter(f=>f.st==='pago').length}</div><div class="ms">liquidados</div></div>`;
+
+  let list=DB.fin;
+  if(FF==='pagar') list=list.filter(f=>f.tp==='pagar'&&f.st!=='pago');
+  else if(FF==='receber') list=list.filter(f=>f.tp==='receber'&&f.st!=='pago');
+  else if(FF==='pago') list=list.filter(f=>f.st==='pago');
+
+  document.getElementById('fin-tb').innerHTML=!list.length
+    ?`<tr><td colspan="8"><div class="empty"><i class="ti ti-file-off"></i><p>Nenhuma conta encontrada</p></div></td></tr>`
+    :list.map(f=>{const i=DB.fin.indexOf(f);return`<tr>
+      <td>#${String(i+1).padStart(4,'0')}</td>
+      <td>${pill(f.tp==='pagar'?'Pagar':'Receber',f.tp==='pagar'?'pb':'po')}</td>
+      <td><b>${f.parte}</b></td><td>${f.cat}</td><td>${fmt_date(f.venc)}</td>
+      <td><b>${R(f.val)}</b></td><td>${pFin(f.st)}</td>
+      <td style="white-space:nowrap">
+        ${f.st!=='pago'?`<button class="btn bo bs" onclick="pagarFin(${i})" title="Marcar pago"><i class="ti ti-check"></i></button>`:''}
+        <button class="btn bo bs" onclick="editFin(${i})" title="Editar"><i class="ti ti-pencil"></i></button>
+        <button class="btn br bs" onclick="delFin(${i})" title="Excluir"><i class="ti ti-trash"></i></button>
+      </td></tr>`}).join('');
+
+  const cats={};
+  DB.fin.filter(f=>f.tp==='pagar').forEach(f=>cats[f.cat]=(cats[f.cat]||0)+f.val);
+  const tc=Object.values(cats).reduce((s,v)=>s+v,0)||1;
+  document.getElementById('fin-cat').innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div style="margin-bottom:9px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span style="color:var(--t3)">${k}</span><b>${Math.round(v/tc*100)}%</b></div>
+      <div class="prog"><div class="pf" style="width:${Math.round(v/tc*100)}%"></div></div>
+    </div>`).join('');
+
+  document.getElementById('fin-res').innerHTML=`
+    <div class="ms-row"><span>Total a receber</span><b style="color:var(--g2)">${R(rec)}</b></div>
+    <div class="ms-row"><span>Total a pagar</span><b style="color:var(--r2)">${R(pag)}</b></div>
+    <div class="ms-row"><span>Saldo projetado</span><b>${R(rec-pag)}</b></div>
+    <div class="ms-row"><span>Vencidos</span><b style="color:var(--r2)">${venc.length} títulos</b></div>
+    <div class="ms-row"><span>Pagos (mês)</span><b style="color:var(--g2)">${DB.fin.filter(f=>f.st==='pago').length}</b></div>`;
+}
+function setFF(f){FF=f;renderFin()}
+function openFin(){
+  document.getElementById('fi').value='';
+  document.getElementById('mf-title').textContent='Nova Conta';
+  ['f-val','f-parte','f-venc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-tp').value='pagar';
+  document.getElementById('f-cat').value='Insumos';
+  openOv('mf');
+}
+function saveFin(){
+  const i=document.getElementById('fi').value;
+  const p=val('f-parte'),v=num('f-val'),vc=val('f-venc');
+  if(!p||!v||!vc){toast('Preencha todos os campos',true);return}
+  const obj={tp:val('f-tp'),parte:p,cat:val('f-cat'),venc:vc,val:v,st:'aberto'};
+  if(i===''){DB.fin.push(obj);toast('Conta adicionada!')}
+  else{DB.fin[+i]={...DB.fin[+i],...obj};toast('Conta atualizada!')}
+  closeOv('mf');renderFin();
+}
+function editFin(i){
+  const f=DB.fin[i];
+  document.getElementById('fi').value=i;
+  document.getElementById('mf-title').textContent='Editar Conta';
+  document.getElementById('f-tp').value=f.tp;
+  document.getElementById('f-parte').value=f.parte;
+  document.getElementById('f-cat').value=f.cat;
+  document.getElementById('f-venc').value=f.venc;
+  document.getElementById('f-val').value=f.val;
+  openOv('mf');
+}
+function delFin(i){if(!confirm('Excluir esta conta?'))return;DB.fin.splice(i,1);renderFin();toast('Conta removida')}
+function pagarFin(i){DB.fin[i].st='pago';renderFin();renderDash();toast('Conta marcada como paga!')}
+
+/* ═══════════════════════════════════════════
+   ESTOQUE
+══════════════════════════════════════════ */
+function renderEst(){
+  const crit=DB.estoque.filter(e=>e.qtd<e.min).length;
+  document.getElementById('est-kpi').innerHTML=`
+    <div class="metric"><div class="ml">Itens cadastrados</div><div class="mv">${DB.estoque.length}</div><div class="ms">produtos</div></div>
+    <div class="metric"><div class="ml">Volume total</div><div class="mv">${N(DB.estoque.reduce((s,e)=>s+e.qtd,0))}</div><div class="ms">unidades</div></div>
+    <div class="metric"><div class="ml">Itens críticos</div><div class="mv">${crit}</div><div class="ms ${crit>0?'dn':''}">abaixo do mínimo</div></div>
+    <div class="metric"><div class="ml">Movimentações</div><div class="mv">${DB.hist.length}</div><div class="ms">registradas</div></div>`;
+
+  document.getElementById('est-tb').innerHTML=!DB.estoque.length
+    ?`<tr><td colspan="7"><div class="empty"><i class="ti ti-box-off"></i><p>Nenhum item cadastrado</p></div></td></tr>`
+    :DB.estoque.map((e,i)=>{
+      const pct=e.min>0?Math.min(Math.round(e.qtd/e.min*100),100):100;
+      const cls=e.qtd<e.min?'b':e.qtd<e.min*1.3?'w':'';
+      return`<tr>
+        <td><b>${e.prod}</b></td><td>${e.un}</td>
+        <td>${N(e.qtd)}</td><td>${N(e.min)}</td>
+        <td style="min-width:90px"><div class="prog"><div class="pf ${cls}" style="width:${pct}%"></div></div></td>
+        <td>${pEst(e.qtd,e.min)}</td>
+        <td style="white-space:nowrap">
+          <button class="btn bo bs" onclick="movEst(${i},'entrada')" title="Dar entrada"><i class="ti ti-arrow-bar-to-down"></i></button>
+          <button class="btn bo bs" onclick="movEst(${i},'saida')" title="Dar saída"><i class="ti ti-arrow-bar-up"></i></button>
+          <button class="btn br bs" onclick="delEst(${i})" title="Excluir"><i class="ti ti-trash"></i></button>
+        </td></tr>`;
+    }).join('');
+
+  document.getElementById('est-hist').innerHTML=![...DB.hist].length
+    ?`<tr><td colspan="5"><div class="empty"><i class="ti ti-history-off"></i><p>Sem movimentações</p></div></td></tr>`
+    :[...DB.hist].reverse().slice(0,10).map(h=>{
+      const e=DB.estoque.find(e=>e.prod===h.prod);
+      return`<tr>
+        <td>${fmt_date(h.data)}</td><td>${h.prod}</td>
+        <td>${pill(h.tp,h.tp==='entrada'?'po':'pw')}</td>
+        <td>${N(h.qtd)} ${e?.un||''}</td><td style="color:var(--t3)">${h.obs}</td></tr>`;
+    }).join('');
+}
+function openEst(){
+  document.getElementById('ei').value='';
+  document.getElementById('me-title').textContent='Nova Movimentação';
+  ['e-prod','e-qtd','e-min','e-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('e-tp').value='entrada';
+  openOv('me');
+}
+function saveEst(){
+  const prod=val('e-prod'),qtd=num('e-qtd'),min=num('e-min'),tp=val('e-tp'),un=val('e-un'),obs=val('e-obs');
+  if(!prod||!qtd){toast('Preencha produto e quantidade',true);return}
+  const ei=DB.estoque.findIndex(e=>e.prod.toLowerCase()===prod.toLowerCase());
+  if(ei>=0){
+    DB.estoque[ei].qtd+=tp==='entrada'?qtd:-qtd;
+    if(min) DB.estoque[ei].min=min;
+  } else {
+    DB.estoque.push({prod,un,qtd:tp==='entrada'?qtd:-qtd,min,obs});
   }
+  DB.hist.push({data:new Date().toISOString().split('T')[0],prod,tp,qtd,obs:obs||tp});
+  closeOv('me');renderEst();renderDash();toast('Movimentação registrada!');
+}
+function movEst(i,tp){
+  const e=DB.estoque[i];
+  const q=Number(prompt(`${tp==='entrada'?'Quantidade de entrada':'Quantidade de saída'} de "${e.prod}" (${e.un}):`));
+  if(!q||q<=0)return;
+  if(tp==='saida'&&q>e.qtd){toast('Quantidade maior que o estoque!',true);return}
+  e.qtd+=tp==='entrada'?q:-q;
+  DB.hist.push({data:new Date().toISOString().split('T')[0],prod:e.prod,tp,qtd:q,obs:tp==='entrada'?'Entrada manual':'Saída manual'});
+  renderEst();renderDash();toast(`${tp==='entrada'?'Entrada':'Saída'} de ${q} ${e.un} registrada!`);
+}
+function delEst(i){if(!confirm('Remover item do estoque?'))return;DB.estoque.splice(i,1);renderEst();toast('Item removido')}
+
+/* ═══════════════════════════════════════════
+   VENDAS
+══════════════════════════════════════════ */
+function renderVenda(){
+  const conf=DB.vendas.filter(v=>v.st==='Confirmado');
+  const pipe=DB.vendas.filter(v=>v.st!=='Cancelado'&&v.st!=='Confirmado');
+  document.getElementById('venda-kpi').innerHTML=`
+    <div class="metric"><div class="ml">Confirmados</div><div class="mv">${conf.length}</div><div class="ms">${R(conf.reduce((s,v)=>s+v.val,0))}</div></div>
+    <div class="metric"><div class="ml">Em pipeline</div><div class="mv">${pipe.length}</div><div class="ms">${R(pipe.reduce((s,v)=>s+v.val,0))}</div></div>
+    <div class="metric"><div class="ml">Total de pedidos</div><div class="mv">${DB.vendas.length}</div><div class="ms">cadastrados</div></div>
+    <div class="metric"><div class="ml">Ticket médio</div><div class="mv">${DB.vendas.length?R(Math.round(DB.vendas.reduce((s,v)=>s+v.val,0)/DB.vendas.length)):R(0)}</div><div class="ms">por pedido</div></div>`;
+
+  const stages=['Prospecção','Qualificação','Proposta','Confirmado'];
+  const sc={Prospecção:{bg:'var(--b3)',n:'var(--b1)',l:'var(--b2)'},Qualificação:{bg:'#e0f2fe',n:'#0c4a6e',l:'#0284c7'},Proposta:{bg:'var(--a3)',n:'var(--a1)',l:'var(--a2)'},Confirmado:{bg:'var(--g4)',n:'var(--g1)',l:'var(--g2)'}};
+  document.getElementById('funil').innerHTML=stages.map((s,i)=>{
+    const c=DB.vendas.filter(v=>v.st===s).length,co=sc[s];
+    return`${i?'<div style="font-size:18px;color:var(--t3);padding-bottom:18px;align-self:flex-end">›</div>':''}
+      <div style="flex:1;min-width:72px;text-align:center"><div style="border-radius:var(--radius-sm);padding:12px 4px;background:${co.bg}">
+        <div style="font-size:20px;font-weight:700;color:${co.n}">${c}</div>
+        <div style="font-size:10px;margin-top:3px;color:${co.l}">${s}</div>
+      </div></div>`;
+  }).join('');
+
+  document.getElementById('venda-tb').innerHTML=!DB.vendas.length
+    ?`<tr><td colspan="8"><div class="empty"><i class="ti ti-shopping-cart-off"></i><p>Nenhum pedido cadastrado</p></div></td></tr>`
+    :DB.vendas.map((v,i)=>`<tr>
+        <td>#${String(i+1).padStart(4,'0')}</td><td><b>${v.cli}</b></td><td>${v.cult}</td>
+        <td>${N(v.vol)} t</td><td><b>${R(v.val)}</b></td><td>${v.resp}</td><td>${pVenda(v.st)}</td>
+        <td style="white-space:nowrap">
+          <button class="btn bo bs" onclick="editVenda(${i})"><i class="ti ti-pencil"></i></button>
+          <button class="btn br bs" onclick="delVenda(${i})"><i class="ti ti-trash"></i></button>
+        </td></tr>`).join('');
+}
+function openVenda(){
+  document.getElementById('vi').value='';
+  document.getElementById('mv-title').textContent='Novo Pedido';
+  ['v-cli','v-vol','v-val','v-resp'].forEach(id=>document.getElementById(id).value='');
+  openOv('mv');
+}
+function saveVenda(){
+  const i=document.getElementById('vi').value;
+  const cli=val('v-cli'),vol=num('v-vol'),v=num('v-val'),resp=val('v-resp');
+  if(!cli||!vol||!v){toast('Preencha todos os campos',true);return}
+  const obj={cli,cult:val('v-cult'),vol,val:v,resp,st:val('v-st')};
+  if(i===''){DB.vendas.push(obj);toast('Pedido cadastrado!')}
+  else{DB.vendas[+i]=obj;toast('Pedido atualizado!')}
+  closeOv('mv');renderVenda();renderDash();
+}
+function editVenda(i){
+  const v=DB.vendas[i];
+  document.getElementById('vi').value=i;
+  document.getElementById('mv-title').textContent='Editar Pedido';
+  document.getElementById('v-cli').value=v.cli;
+  document.getElementById('v-cult').value=v.cult;
+  document.getElementById('v-vol').value=v.vol;
+  document.getElementById('v-val').value=v.val;
+  document.getElementById('v-resp').value=v.resp;
+  document.getElementById('v-st').value=v.st;
+  openOv('mv');
+}
+function delVenda(i){if(!confirm('Excluir pedido?'))return;DB.vendas.splice(i,1);renderVenda();renderDash();toast('Pedido removido')}
+
+/* ═══════════════════════════════════════════
+   PRODUÇÃO
+══════════════════════════════════════════ */
+function renderProd(){
+  const ta=DB.talhoes.reduce((s,t)=>s+t.area,0);
+  const mp=DB.talhoes.length?DB.talhoes.reduce((s,t)=>s+t.prod,0)/DB.talhoes.length:0;
+  document.getElementById('prod-kpi').innerHTML=`
+    <div class="metric"><div class="ml">Área total</div><div class="mv">${N(ta)} ha</div><div class="ms">${DB.talhoes.length} talhões</div></div>
+    <div class="metric"><div class="ml">Produtividade média</div><div class="mv">${mp.toFixed(0)} sc/ha</div><div class="ms">média geral</div></div>
+    <div class="metric"><div class="ml">Colheita estimada</div><div class="mv">${N(DB.talhoes.reduce((s,t)=>s+t.area*t.prod,0))} sc</div><div class="ms">safra total</div></div>
+    <div class="metric"><div class="ml">Em maturação</div><div class="mv">${DB.talhoes.filter(t=>t.est==='Maturação').length}</div><div class="ms">prontos para colher</div></div>`;
+
+  document.getElementById('prod-tb').innerHTML=!DB.talhoes.length
+    ?`<tr><td colspan="8"><div class="empty"><i class="ti ti-map-off"></i><p>Nenhum talhão cadastrado</p></div></td></tr>`
+    :DB.talhoes.map((t,i)=>`<tr>
+        <td><b>${t.nome}</b></td><td>${t.cult}</td><td>${N(t.area)}</td>
+        <td>${pProd(t.est)}</td><td>${t.prod} sc/ha</td><td>${fmt_date(t.col)}</td>
+        <td>${pill(t.est==='Colhido'?'Colhido':t.est==='Maturação'?'Pronto':'Em andamento',t.est==='Colhido'?'po':t.est==='Maturação'?'pi':'pw')}</td>
+        <td style="white-space:nowrap">
+          <button class="btn bo bs" onclick="editTalhao(${i})"><i class="ti ti-pencil"></i></button>
+          <button class="btn br bs" onclick="delTalhao(${i})"><i class="ti ti-trash"></i></button>
+        </td></tr>`).join('');
+
+  if(DB.talhoes.length) mkBar('prod-bc',DB.talhoes.map(t=>({l:t.nome.replace('Talhão ','T'),v:t.prod})));
+  else document.getElementById('prod-bc').innerHTML='<div class="empty" style="width:100%"><i class="ti ti-chart-bar-off"></i><p>Sem dados</p></div>';
+
+  document.getElementById('prod-res').innerHTML=`
+    <div class="ms-row"><span>Total de talhões</span><b>${DB.talhoes.length}</b></div>
+    <div class="ms-row"><span>Área total</span><b>${N(ta)} ha</b></div>
+    <div class="ms-row"><span>Produtividade média</span><b>${mp.toFixed(1)} sc/ha</b></div>
+    <div class="ms-row"><span>Produção estimada</span><b>${N(DB.talhoes.reduce((s,t)=>s+t.area*t.prod,0))} sc</b></div>
+    <div class="ms-row"><span>Em maturação</span><b>${DB.talhoes.filter(t=>t.est==='Maturação').length} talhões</b></div>
+    <div class="ms-row"><span>Já colhidos</span><b>${DB.talhoes.filter(t=>t.est==='Colhido').length} talhões</b></div>`;
+}
+function openTalhao(){
+  document.getElementById('ti2').value='';
+  document.getElementById('mt-title').textContent='Novo Talhão';
+  ['t-nome','t-area','t-prod','t-col'].forEach(id=>document.getElementById(id).value='');
+  openOv('mt');
+}
+function saveTalhao(){
+  const i=document.getElementById('ti2').value;
+  const nome=val('t-nome'),area=num('t-area');
+  if(!nome||!area){toast('Preencha nome e área',true);return}
+  const obj={nome,cult:val('t-cult'),area,prod:num('t-prod'),est:val('t-est'),col:val('t-col')};
+  if(i===''){DB.talhoes.push(obj);toast('Talhão cadastrado!')}
+  else{DB.talhoes[+i]=obj;toast('Talhão atualizado!')}
+  closeOv('mt');renderProd();renderDash();
+}
+function editTalhao(i){
+  const t=DB.talhoes[i];
+  document.getElementById('ti2').value=i;
+  document.getElementById('mt-title').textContent='Editar Talhão';
+  document.getElementById('t-nome').value=t.nome;
+  document.getElementById('t-cult').value=t.cult;
+  document.getElementById('t-area').value=t.area;
+  document.getElementById('t-prod').value=t.prod;
+  document.getElementById('t-est').value=t.est;
+  document.getElementById('t-col').value=t.col||'';
+  openOv('mt');
+}
+function delTalhao(i){if(!confirm('Excluir talhão?'))return;DB.talhoes.splice(i,1);renderProd();renderDash();toast('Talhão removido')}
 </script>
 </body>
 </html>
